@@ -1,12 +1,14 @@
-# gradle-testsets-plugin
+# Gradle TestSets plugin
 
 A plugin for the Gradle build system that allows specifying test sets (like integration or acceptance tests). A test set is a logical grouping of a source set and related dependency configurations, tasks and artifacts.
 
 ## Usage
 
-To use the TestSets plugin, include the following line in your build script:
+To use the TestSets plugin, include the following lines in your build script:
 
-    apply plugin: 'test-sets'
+	plugins {
+		id 'org.unbroken-dome.test-sets'
+	}
 
 The TestSets plugin will only work in conjunction with the `java` and/or `groovy` plugin.
 
