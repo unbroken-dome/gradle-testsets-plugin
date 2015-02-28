@@ -7,7 +7,7 @@ A plugin for the Gradle build system that allows specifying test sets (like inte
 To use the TestSets plugin, include the following lines in your build script:
 
 	plugins {
-		id 'org.unbroken-dome.test-sets'
+		id 'org.unbroken-dome.test-sets' version '1.0.0'
 	}
 
 The TestSets plugin will only work in conjunction with the `java` and/or `groovy` plugin.
