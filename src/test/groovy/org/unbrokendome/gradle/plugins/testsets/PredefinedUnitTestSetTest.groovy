@@ -13,7 +13,7 @@ public class PredefinedUnitTestSetTest extends Specification {
 	
 	def setup() {
 		project = ProjectBuilder.builder().build()
-		project.apply plugin: 'test-sets'
+		project.apply plugin: 'org.unbroken-dome.test-sets'
 	}
 	
 	

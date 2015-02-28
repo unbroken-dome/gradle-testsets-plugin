@@ -14,20 +14,18 @@ public class TestsPluginTest extends Specification {
 	
 	def setup() {
 		project = ProjectBuilder.builder().build()
+		project.apply plugin: 'org.unbroken-dome.test-sets'
 	}
 	
 	
 	def "Test sets extension should be created"() {	
-		when:
-			project.apply plugin: 'test-sets'
-		then:
+		expect:
 			project.testSets
 	}
 
 	
 	def "New test set's compile configuration should extend the testCompile configuration"() {
 		when:
-			project.apply plugin: 'test-sets'
 			project.testSets { myTest }
 		then:
 			project.configurations['myTestCompile'].extendsFrom == [ project.configurations['testCompile'] ].toSet()
@@ -36,7 +34,6 @@ public class TestsPluginTest extends Specification {
 	
 	def "New test set should have an associated runtime configuration"() {
 		when:
-			project.apply plugin: 'test-sets'
 			project.testSets { myTest }
 		then:
 			project.configurations['myTestRuntime']
@@ -45,7 +42,6 @@ public class TestsPluginTest extends Specification {
 	
 	def "New test set's runtime configuration should extend the testRuntime configuration"() {
 		when:
-			project.apply plugin: 'test-sets'
 			project.testSets { myTest }
 		then:
 			project.configurations['myTestRuntime'].extendsFrom.contains project.configurations['testRuntime']
