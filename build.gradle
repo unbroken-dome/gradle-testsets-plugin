@@ -10,60 +10,21 @@ plugins {
 
 group = 'org.unbroken-dome.gradle-plugins'
 archivesBaseName = 'gradle-testsets-plugin'
-version = '1.0.0'
+version = '1.0.1'
 
 
 sourceCompatibility = '1.8'
 targetCompatibility = '1.8'
 
 
-repositories {
-	mavenCentral()
-	maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
-}
-
-
 dependencies {
 	compile gradleApi()
-	
 	compile 'com.google.guava:guava:18.0'
 	
-	testCompile 'org.codehaus.groovy:groovy-all:2.3.6'
-	testCompile 'org.spockframework:spock-core:1.0-groovy-2.3-SNAPSHOT'
+	testCompile ('org.spockframework:spock-core:0.7-groovy-2.0') {
+		exclude group: 'org.codehaus.groovy'
+	} 
 	testCompile 'org.hamcrest:hamcrest-all:1.3'
-}
-
-configurations {
-	all*.exclude module: 'junit-dep'
-}
-
-
-task javadocJar(type: Jar) {
-	description = 'Assembles a jar archive containing the javadocs.'
-	classifier = 'javadoc'
-	from javadoc
-}
-
-
-task sourcesJar(type: Jar) {
-	description = 'Assembles a jar archive containing the sources.'
-	classifier = 'sources'
-	from sourceSets.main.allSource
-}
-
-
-artifacts {
-	archives javadocJar, sourcesJar
-}
-
-
-signing {
-	sign configurations.archives
-}
-
-
-eclipse.project {
-	natures 'org.springsource.ide.eclipse.gradle.core.nature'
 }
 
 
@@ -97,10 +58,53 @@ def pomDefinition = pom {
 }
 
 
+task generatePom {
+	outputs.file "$buildDir/poms/pom.xml"
+	doLast {
+		pomDefinition.writeTo "$buildDir/poms/pom.xml"
+	}
+}
+
+
+jar {
+	into("META-INF/maven/$project.group/$project.name") {
+		from generatePom
+	}
+}
+
+
+task javadocJar(type: Jar) {
+	description = 'Assembles a jar archive containing the javadocs.'
+	classifier = 'javadoc'
+	from javadoc
+}
+
+
+task sourcesJar(type: Jar) {
+	description = 'Assembles a jar archive containing the sources.'
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
+
+artifacts {
+	archives javadocJar, sourcesJar
+}
+
+
+signing {
+	sign configurations.archives
+}
+
+
+eclipse.project {
+	natures 'org.springsource.ide.eclipse.gradle.core.nature'
+}
+
+
 install {
 	repositories.mavenInstaller {
 		beforeDeployment { deployment -> signing.signPom(deployment) }
-		
 		pom = pomDefinition
 	}
 }
