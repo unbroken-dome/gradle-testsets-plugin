@@ -4,46 +4,78 @@ A plugin for the Gradle build system that allows specifying test sets (like inte
 
 ## Usage
 
-To use the TestSets plugin, include the following lines in your build script:
+### Applying the plugin
 
-	plugins {
-		id 'org.unbroken-dome.test-sets' version '1.0.1'
-	}
+To use the TestSets plugin, include either of the following in your build script:
+
+#### New Plugins DSL (Gradle 2.1+)
+
+```groovy
+plugins {
+    id 'org.unbroken-dome.test-sets' version '1.0.2'
+}
+```
+
+#### Traditional (Gradle 1.x/2.0)
+
+```groovy
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:1.0.2'
+    }
+}
+
+apply plugin: 'org.unbroken-dome.test-sets'
+```
+
+### Prerequisites
 
 The TestSets plugin will only work in conjunction with the `java` and/or `groovy` plugin.
 
-To define a new test set, use the `testSets` DSL in the project:
-
-    testSets {
-        integrationTest
-    }
-    
-Where "integrationTest" would be the name of the test set.
-
-This will automatically create the following objects in your project:
-* A a [source set](http://gradle.org/docs/current/userguide/java_plugin.html#N11F7B) named "integrationTest";
-* A [dependency configuration](http://gradle.org/docs/current/userguide/dependency_management.html#sub:configurations) named "integrationTestCompile", which extends from "testCompile";
-* A  dependency configuration named "integrationTestRuntime", which extends from "testRuntime";
-* A [Test](http://gradle.org/docs/current/userguide/java_plugin.html#sec:java_test) task named "integrationTest" which will run the tests in the set;
-* A [Jar](http://gradle.org/docs/current/userguide/java_plugin.html#N12A7C) task named "integrationTestJar" which will package the tests.
+You will need to run Gradle with a JDK 1.7 or higher to use the plugin.
 
 ## Test sets DSL
 
-A test set is a logical grouping of the following:
+The test set is a logical grouping of the following:
+
 - a [source set](http://gradle.org/docs/current/userguide/java_plugin.html#N11F7B);
 - a compile and runtime [dependency configuration](http://gradle.org/docs/current/userguide/dependency_management.html#sub:configurations);
 - a [Test](http://gradle.org/docs/current/userguide/java_plugin.html#sec:java_test) task to run the tests;
 - a [Jar](http://gradle.org/docs/current/userguide/java_plugin.html#N12A7C) task to package the tests;
 - optionally, an [artifact](http://gradle.org/docs/current/userguide/artifact_management.html) that can be published.
 
+To define a new test set, use the `testSets` DSL in the project:
+
+```groovy
+testSets {
+    integrationTest
+}
+```
+
+Where "integrationTest" would be the name of the test set.
+
+This would automatically create the following objects:
+
+* A source set named "integrationTest";
+* A dependency configuration named "integrationTestCompile", which extends from "testCompile";
+* A dependency configuration named "integrationTestRuntime", which extends from "testRuntime";
+* A Test task named "integrationTest" which will run the tests in the set;
+* A Jar task named "integrationTestJar" which will package the tests.
+
+
 ### Extending other test sets
 
 A test set can extend other test sets. This makes the test set's `compile` and `runtime` configurations extend the other test set's `compile` and `runtime` configurations, respectively.
 
-    testSets {
-        fooTest
-        barTest { extendsFrom fooTest }
-    }
+```groovy
+testSets {
+    fooTest
+    barTest { extendsFrom fooTest }
+}
+```
 
 ### Predefined unit test set
 
@@ -55,9 +87,11 @@ All new test sets implicitly extend the "unitTest" set, meaning that every test 
 
 For a source set named "myTest", the `java` plugin by default assumes the directories `src/myTest/java` and `src/myTest/resources`. A different directory name can be specified using the `dirName` on the test set, for example:
 
-    testSets {
-        myTest { dirName = 'my-test' }
-    }
+```groovy
+testSets {
+    myTest { dirName = 'my-test' }
+}
+```
     
 Which would change the source set's java and resources directories to `src/my-test/java` and `src/my-test/resources`, respectively. This also works with the `groovy` source directory, if the `groovy` plugin is applied to the project.
 
@@ -65,9 +99,10 @@ Which would change the source set's java and resources directories to `src/my-te
 
 Optionally, an artifact containing the test set's classes and resources can be added to the project's output. To activate this, simply set the `createArtifact` property of the test set to `true`:
 
-    testSets {
-        integrationTest { createArtifact = true }
-    }
+```groovy
+testSets {
+    integrationTest { createArtifact = true }
+}
     
 This will add the artifact `<projectName>-integrationTest.jar` to the project's artifacts.
 
