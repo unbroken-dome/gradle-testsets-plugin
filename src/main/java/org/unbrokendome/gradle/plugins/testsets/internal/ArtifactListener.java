@@ -22,7 +22,7 @@ public class ArtifactListener {
 
 	@Subscribe
 	public void testSetAdded(TestSetAddedEvent event) {
-		TestSet testSet = event.getTestSet();
+		final TestSet testSet = event.getTestSet();
 
 		project.afterEvaluate(new Action<Project>() {
 

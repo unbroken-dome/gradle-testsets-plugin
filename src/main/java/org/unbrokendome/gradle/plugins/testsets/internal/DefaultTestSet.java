@@ -69,10 +69,10 @@ public class DefaultTestSet extends AbstractTestSet implements ConfigurableTestS
 
 	private ConfigurableTestSet extendsFromInternal(Collection<TestSet> superTestSets) {
 		
-		superTestSets.forEach( superTestSet -> {
+		for (TestSet superTestSet : superTestSets) {
 			extendsFrom.add(superTestSet);
 			eventBus.post(new ExtendsFromAddedEvent(this, superTestSet));
-		});
+		}
 		
 		return this;
 	}
