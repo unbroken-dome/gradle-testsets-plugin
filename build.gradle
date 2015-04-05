@@ -12,13 +12,13 @@ archivesBaseName = 'gradle-testsets-plugin'
 version = '1.0.2'
 
 
-sourceCompatibility = '1.7'
-targetCompatibility = '1.7'
+repositories {
+	jcenter()
+}
 
 
 dependencies {
 	compile gradleApi()
-	compile 'com.google.guava:guava:18.0'
 	
 	testCompile ('org.spockframework:spock-core:0.7-groovy-2.0') {
 		exclude group: 'org.codehaus.groovy'
