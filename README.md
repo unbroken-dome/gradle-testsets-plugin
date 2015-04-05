@@ -106,3 +106,31 @@ testSets {
     
 This will add the artifact `<projectName>-integrationTest.jar` to the project's artifacts.
 
+
+## IDE Support
+
+The plugin supports Eclipse and IntelliJ IDEA through the `eclipse` and `idea` plugins. If these plugins are active in
+a project, each test set's source sets and dependencies will be added to the Eclipse/IDEA project.
+
+Neither Eclipse nor IntelliJ IDEA support the notion of multiple test sets per project / module, so what the plugin does
+is only a "best fit" so you can at least run the tests from your IDE. These tests will never be executed in isolation,
+however, which may become an issue if you have files of the same name (e.g. log4j2-test.xml) in different source sets.
+
+### Eclipse
+
+If your project applies the `eclipse` plugin, the TestSets plugin will automatically add each test set's dependencies
+to the classpath. SourceSets that are generated for a test set are automatically mapped to source folders in Eclipse,
+without any further configuration. (Eclipse does not distinguish between production and test source folders.)
+
+Eclipse does not support different scopes for dependencies; all dependencies (main, test and additional test sets) are
+thrown into a shared "Gradle classpath container".
+
+### IntelliJ IDEA
+
+If your project applies the `idea` plugin, the TestSets plugin will add the source set root directories as source folders
+to your IDEA module and mark them as "test sources root" (these folders will be marked with a green folder icon in the
+project view).
+
+Dependencies for each test set are added under TEST scope (which is the same scope that is used for unit tests).
+
+
