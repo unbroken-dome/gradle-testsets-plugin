@@ -9,7 +9,7 @@ plugins {
 
 group = 'org.unbroken-dome.gradle-plugins'
 archivesBaseName = 'gradle-testsets-plugin'
-version = '1.0.2'
+version = '1.1.0'
 
 
 repositories {

@@ -12,7 +12,7 @@ To use the TestSets plugin, include either of the following in your build script
 
 ```groovy
 plugins {
-    id 'org.unbroken-dome.test-sets' version '1.0.2'
+    id 'org.unbroken-dome.test-sets' version '1.1.0'
 }
 ```
 
