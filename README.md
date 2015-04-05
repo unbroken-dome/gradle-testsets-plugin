@@ -103,6 +103,7 @@ Optionally, an artifact containing the test set's classes and resources can be a
 testSets {
     integrationTest { createArtifact = true }
 }
+```
     
 This will add the artifact `<projectName>-integrationTest.jar` to the project's artifacts.
 
