@@ -31,5 +31,6 @@ public class TestSetsPlugin implements Plugin<Project> {
         instantiator.newInstance JarTaskListener, project
         instantiator.newInstance ArtifactListener, project
         instantiator.newInstance EclipseClasspathListener, project
+		instantiator.newInstance IdeaModuleListener, project
 	}
 }
