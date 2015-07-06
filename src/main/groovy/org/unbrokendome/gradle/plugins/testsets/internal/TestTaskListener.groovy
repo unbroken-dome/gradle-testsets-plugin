@@ -24,7 +24,7 @@ class TestTaskListener {
 		def testTask = project.tasks.create testSet.testTaskName, Test
 
         testTask.conventionMapping.with {
-            map('description') { "Runs the ${testSet.name} tasks" }
+            map('description') { "Runs the ${testSet.name} tests" }
 
             map('group') { JavaBasePlugin.VERIFICATION_GROUP }
 
@@ -38,5 +38,8 @@ class TestTaskListener {
                 sourceSet.runtimeClasspath
             }
         }
+
+        testTask.reports.html.destination = new File(project.buildDir, testSet.name)
+        testTask.reports.junitXml.destination = new File(project.buildDir, "${testSet.name}-results")
 	}
 }
