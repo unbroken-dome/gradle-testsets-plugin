@@ -24,7 +24,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:1.0.2'
+        classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:1.1.0'
     }
 }
 
@@ -74,6 +74,15 @@ A test set can extend other test sets. This makes the test set's `compile` and `
 testSets {
     fooTest
     barTest { extendsFrom fooTest }
+}
+```
+
+It does _not_ mean, however, that the source (classes / resources) of the extended test set will be available to the
+extending test set. For this you would still have to create a dependency:
+
+```groovy
+dependencies {
+    fooTestCompile sourceSets.barTest.output
 }
 ```
 
