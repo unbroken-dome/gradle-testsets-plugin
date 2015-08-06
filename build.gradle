@@ -130,7 +130,8 @@ bintray {
 }
 
 
-task release(dependsOn: ['build', 'install', 'bintrayUpload']) << {
+task release(dependsOn: ['bintrayUpload']) {
     group = 'publishing'
+} << {
     println "Releasing $version"
 }
