@@ -2,15 +2,14 @@ plugins {
 	id 'java'
 	id 'groovy'
 	id 'maven'
-	id 'maven-publish'
 	id 'signing'
 	id 'com.jfrog.bintray' version '1.0'
 }
 
-group = 'org.unbroken-dome.gradle-plugins'
-archivesBaseName = 'gradle-testsets-plugin'
-version = '1.1.0'
-
+if (!gradle.startParameter.taskNames.contains('release')) {
+    println "Not a release build, setting version to ${version}-SNAPSHOT"
+    version += '-SNAPSHOT'
+}
 
 repositories {
 	jcenter()
@@ -28,96 +27,79 @@ dependencies {
 
 
 def pomDefinition = pom {
-	project {
-		name project.friendly_name
-		packaging 'jar'
-		description project.description
-		url project.home_url
-		
-		scm {
-			connection "scm:git:${project.scm_url}"
-			developerConnection "scm:git:${project.scm_url}"
-			url project.scm_url
-		}
-		
-		licenses {
-			license {
-				name = project.license_name
-				url project.license_url
-			}
-		}
-		
-		developers {
-			developer {
-				name 'Till Krullmann'
-				email 'till.krullmann@gmx.net'
-			}
-		}
-	}
+    project {
+        name project.friendly_name
+        packaging 'jar'
+        description project.description
+        url project.home_url
+
+        scm {
+            connection "scm:git:${project.scm_url}"
+            developerConnection "scm:git:${project.scm_url}"
+            url project.scm_url
+        }
+
+        licenses {
+            license {
+                name = project.license_name
+                url project.license_url
+            }
+        }
+
+        developers {
+            developer {
+                name 'Till Krullmann'
+                email 'till.krullmann@gmx.net'
+            }
+        }
+    }
 }
 
 
 task generatePom {
-	outputs.file "$buildDir/poms/pom.xml"
-	doLast {
-		pomDefinition.writeTo "$buildDir/poms/pom.xml"
-	}
+    outputs.file "$buildDir/poms/pom.xml"
+    doLast {
+        pomDefinition.writeTo "$buildDir/poms/pom.xml"
+    }
 }
 
 
 jar {
-	into("META-INF/maven/$project.group/$project.name") {
-		from generatePom
-	}
+    into("META-INF/maven/$project.group/$project.name") {
+        from generatePom
+    }
 }
 
 
 task javadocJar(type: Jar) {
-	description = 'Assembles a jar archive containing the javadocs.'
-	classifier = 'javadoc'
-	from javadoc
+    description = 'Assembles a jar archive containing the javadocs.'
+    classifier = 'javadoc'
+    from javadoc
 }
 
 
 task sourcesJar(type: Jar) {
-	description = 'Assembles a jar archive containing the sources.'
-	classifier = 'sources'
-	from sourceSets.main.allSource
+    description = 'Assembles a jar archive containing the sources.'
+    classifier = 'sources'
+    from sourceSets.main.allSource
 }
 
 
 artifacts {
-	archives javadocJar, sourcesJar
+    archives javadocJar, sourcesJar
 }
 
 
 signing {
-	sign configurations.archives
+    sign configurations.archives
 }
 
 
 install {
-	repositories.mavenInstaller {
-		beforeDeployment { deployment -> signing.signPom(deployment) }
-		pom = pomDefinition
-	}
-}
-
-
-uploadArchives {
-	repositories.mavenDeployer {
-		beforeDeployment { deployment -> signing.signPom(deployment) }
-		
-		repository(url: 'https://oss.sonatype.org/service/local/staging/deploy/maven2/') {
-			authentication(userName: ossrh_user, password: ossrh_password)
-		}
-		
-		snapshotRepository(url: 'https://oss.sonatype.org/content/repositories/snapshots/') {
-			authentication(userName: ossrh_user, password: ossrh_password)
-		}
-		
-		pom = pomDefinition
-	}
+    repositories.mavenInstaller {
+        beforeDeployment { deployment -> signing.signPom(deployment) }
+        pom = pomDefinition
+    }
 }
 
 
@@ -145,4 +127,9 @@ bintray {
 			]
 		}
 	}
+}
+
+
+task release(dependsOn: ['bintrayUpload']) << {
+    println "Releasing $version"
 }
