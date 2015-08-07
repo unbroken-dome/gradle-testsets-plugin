@@ -27,6 +27,6 @@ class IdeaModuleTest extends Specification {
 
 
     private Set<File> testSetSourceDirs() {
-        [ project.file('src/myTest/java'), project.file('src/myTest/resources') ] as Set
+        [ project.file('src/myTest/java') ] as Set
     }
 }

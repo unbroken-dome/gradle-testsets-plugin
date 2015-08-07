@@ -1,6 +1,8 @@
 package org.unbrokendome.gradle.plugins.testsets.internal
 
 import org.gradle.api.Project
+import org.gradle.api.internal.plugins.DslObject
+import org.gradle.api.tasks.GroovySourceSet
 import org.gradle.api.tasks.SourceSet
 import org.gradle.plugins.ide.idea.model.*
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
@@ -10,7 +12,7 @@ import java.nio.file.Paths
 
 public class IdeaModuleListener {
 
-    private final Project project;
+    final Project project;
 
 
     public IdeaModuleListener(Project project) {
@@ -29,11 +31,38 @@ public class IdeaModuleListener {
             def ideaModule = ideaModel.module
 
             def sourceSet = project.sourceSets[testSet.sourceSetName] as SourceSet
-            ideaModule.testSourceDirs += sourceSet.allSource.srcDirs
 
-            ideaModule.scopes.TEST.plus += [ project.configurations[testSet.runtimeConfigurationName] ]
+            ideaModule.testSourceDirs += sourceSet.allJava.srcDirs
+
+            def groovySourceSet = new DslObject(sourceSet).convention.findPlugin(GroovySourceSet)
+            if (groovySourceSet) {
+                ideaModule.testSourceDirs += groovySourceSet.allGroovy.srcDirs
+            }
+
+            ideaModule.iml.withXml {
+                def moduleRootManager = it.asNode().component.find { it.@name == 'NewModuleRootManager' }
+                def sourceFolderNode = moduleRootManager?.content?.sourceFolder?.last()
+                sourceSet.resources.srcDirs.each { resourcesDir ->
+                    def relPath = project.relativePath(resourcesDir.canonicalPath).replace('\\', '/')
+                    sourceFolderNode += {
+                        sourceFolder(url: 'file://$MODULE_DIR$/' + relPath,
+                                type: 'java-test-resource')
+                    }
+                }
+            }
+
+            addConfigurationToClasspath testSet.compileConfigurationName, ideaModule
+            addConfigurationToClasspath testSet.runtimeConfigurationName, ideaModule
 
             applyLibraryFix ideaModule
+        }
+    }
+
+
+    private void addConfigurationToClasspath(String configurationName, IdeaModule ideaModule) {
+        def testSetConfiguration = project.configurations.findByName configurationName
+        if (testSetConfiguration) {
+            ideaModule.scopes.TEST.plus += [ testSetConfiguration ]
         }
     }
 
