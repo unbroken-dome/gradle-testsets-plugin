@@ -1,11 +1,9 @@
 package org.unbrokendome.gradle.plugins.testsets.internal
 
+import org.gradle.api.Action
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
-
-import java.util.function.BiConsumer
-import java.util.function.Consumer
 
 
 class PredefinedUnitTestSet extends AbstractTestSet {
@@ -62,11 +60,11 @@ class PredefinedUnitTestSet extends AbstractTestSet {
 
 
     @Override
-    void whenExtendsFromAdded(Consumer<TestSet> action) {
+    void whenExtendsFromAdded(Action<TestSet> action) {
     }
 
 
     @Override
-    void whenDirNameChanged(Consumer<String> action) {
+    void whenDirNameChanged(Action<String> action) {
     }
 }

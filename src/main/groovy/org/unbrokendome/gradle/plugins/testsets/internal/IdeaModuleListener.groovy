@@ -13,7 +13,7 @@ import java.nio.file.Paths
 
 public class IdeaModuleListener {
 
-    private final Project project
+    final Project project
 
 
     public IdeaModuleListener(Project project) {

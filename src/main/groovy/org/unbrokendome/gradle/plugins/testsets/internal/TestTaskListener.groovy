@@ -10,7 +10,7 @@ import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetContainer
 
 class TestTaskListener {
 
-    private final Project project
+    final Project project
 
 
     TestTaskListener(Project project) {

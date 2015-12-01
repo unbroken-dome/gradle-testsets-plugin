@@ -1,7 +1,8 @@
 package org.unbrokendome.gradle.plugins.testsets.dsl
 
+import org.gradle.api.Action
 import org.gradle.api.Named
-import java.util.function.Consumer
+
 
 interface TestSet extends Named {
 
@@ -35,6 +36,8 @@ interface TestSet extends Named {
     String getArtifactConfigurationName()
 
 
-    void whenExtendsFromAdded(Consumer<TestSet> action)
-    void whenDirNameChanged(Consumer<String> action)
+    void whenExtendsFromAdded(Action<TestSet> action)
+
+
+    void whenDirNameChanged(Action<String> action)
 }

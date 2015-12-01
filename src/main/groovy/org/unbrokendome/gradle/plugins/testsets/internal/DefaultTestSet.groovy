@@ -1,10 +1,10 @@
 package org.unbrokendome.gradle.plugins.testsets.internal
 
+import org.gradle.api.Action
 import org.unbrokendome.gradle.plugins.testsets.dsl.ConfigurableTestSet
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
 
 import java.util.concurrent.CopyOnWriteArrayList
-import java.util.function.Consumer
 
 
 class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
@@ -14,8 +14,8 @@ class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
     private String dirName
     boolean createArtifact = true
     String classifier
-    private final List<Consumer<TestSet>> extendsFromAddedListeners = new CopyOnWriteArrayList<>()
-    private final List<Consumer<String>> dirNameChangeListeners = new CopyOnWriteArrayList<>()
+    private final List<Action<TestSet>> extendsFromAddedListeners = new CopyOnWriteArrayList<>()
+    private final List<Action<String>> dirNameChangeListeners = new CopyOnWriteArrayList<>()
 
 
     DefaultTestSet(String name) {
@@ -32,7 +32,7 @@ class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
     @Override
     void setDirName(String dirName) {
         this.dirName = dirName
-        dirNameChangeListeners.each { it.accept dirName }
+        dirNameChangeListeners.each { it.execute dirName }
     }
 
 
@@ -45,7 +45,7 @@ class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
     private ConfigurableTestSet extendsFromInternal(Collection<TestSet> superTestSets) {
         for (superTestSet in superTestSets) {
             extendsFrom << superTestSet
-            extendsFromAddedListeners.each { it.accept superTestSet }
+            extendsFromAddedListeners.each { it.execute superTestSet }
         }
         this
     }
@@ -64,13 +64,13 @@ class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
 
 
     @Override
-    void whenExtendsFromAdded(Consumer<TestSet> action) {
+    void whenExtendsFromAdded(Action<TestSet> action) {
         extendsFromAddedListeners << action
     }
 
 
     @Override
-    void whenDirNameChanged(Consumer<String> action) {
+    void whenDirNameChanged(Action<String> action) {
         dirNameChangeListeners << action
     }
 }
