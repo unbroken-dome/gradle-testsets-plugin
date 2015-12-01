@@ -7,21 +7,22 @@ import org.gradle.api.tasks.testing.Test
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetContainer
 
+
 class TestTaskListener {
 
-	final Project project
+    private final Project project
 
 
-	TestTaskListener(Project project) {
-		this.project = project;
+    TestTaskListener(Project project) {
+        this.project = project
 
         def testSets = project.testSets as TestSetContainer
         testSets.whenObjectAdded { testSetAdded(it) }
-	}
+    }
 
 
-	void testSetAdded(TestSet testSet) {
-		def testTask = project.tasks.create testSet.testTaskName, Test
+    void testSetAdded(TestSet testSet) {
+        def testTask = project.tasks.create testSet.testTaskName, Test
 
         testTask.conventionMapping.with {
             map('description') { "Runs the ${testSet.name} tests" }
@@ -41,5 +42,5 @@ class TestTaskListener {
 
         testTask.reports.html.destination = new File(project.buildDir, testSet.name)
         testTask.reports.junitXml.destination = new File(project.buildDir, "${testSet.name}-results")
-	}
+    }
 }

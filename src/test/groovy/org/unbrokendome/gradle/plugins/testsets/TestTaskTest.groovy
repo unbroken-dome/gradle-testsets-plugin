@@ -8,40 +8,43 @@ import spock.lang.Specification
 
 
 class TestTaskTest extends Specification {
-	
-	Project project;
-	
-	
-	def setup() {
-		project = ProjectBuilder.builder().build()
-		project.apply plugin: 'org.unbroken-dome.test-sets'
-	}
-	
-	
-	def "New test set should have associated test task"() {
-		when:
-			project.testSets { myTest }
-		then:
-			project.tasks['myTest'] instanceof Test
-	}
+
+    Project project
 
 
-	def "HTML report output directory should be the name of the test set"() {
-		when:
-			project.testSets { myTest }
-		then:
-			def testTask = project.tasks['myTest'] as Test
-			def htmlReportDir = project.file(testTask.reports.html.destination)
-			htmlReportDir == new File(project.buildDir, 'myTest')
-	}
+    def setup() {
+        project = ProjectBuilder.builder().build()
+        project.apply plugin: 'org.unbroken-dome.test-sets'
+    }
 
 
-	def "JUnitXML report output directory should be the based on the name of the test set"() {
-		when:
-			project.testSets { myTest }
-		then:
-			def testTask = project.tasks['myTest'] as Test
-			def htmlReportDir = project.file(testTask.reports.junitXml.destination)
-			htmlReportDir == new File(project.buildDir, 'myTest-results')
-	}
+    def "New test set should have associated test task"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            project.tasks['myTest'] instanceof Test
+    }
+
+
+    def "HTML report output directory should be the name of the test set"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            def testTask = project.tasks['myTest'] as Test
+            def htmlReportDir = project.file(testTask.reports.html.destination)
+            htmlReportDir == new File(project.buildDir, 'myTest')
+    }
+
+
+    def "JUnitXML report output directory should be the based on the name of the test set"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            def testTask = project.tasks['myTest'] as Test
+            def htmlReportDir = project.file(testTask.reports.junitXml.destination)
+            htmlReportDir == new File(project.buildDir, 'myTest-results')
+    }
 }

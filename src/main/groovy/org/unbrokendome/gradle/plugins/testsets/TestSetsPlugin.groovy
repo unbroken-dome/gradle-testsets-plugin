@@ -10,18 +10,18 @@ import javax.inject.Inject
 
 public class TestSetsPlugin implements Plugin<Project> {
 
-	private final Instantiator instantiator
+    private final Instantiator instantiator
 
 
-	@Inject
-	public TestSetsPlugin(Instantiator instantiator) {
-		this.instantiator = instantiator
-	}
+    @Inject
+    public TestSetsPlugin(Instantiator instantiator) {
+        this.instantiator = instantiator
+    }
 
 
-	@Override
-	void apply(Project project) {
-		project.apply plugin: JavaPlugin
+    @Override
+    void apply(Project project) {
+        project.apply plugin: JavaPlugin
 
         project.extensions.create('testSets', DefaultTestSetContainer, instantiator)
 
@@ -31,6 +31,6 @@ public class TestSetsPlugin implements Plugin<Project> {
         instantiator.newInstance JarTaskListener, project
         instantiator.newInstance ArtifactListener, project
         instantiator.newInstance EclipseClasspathListener, project
-		instantiator.newInstance IdeaModuleListener, project
-	}
+        instantiator.newInstance IdeaModuleListener, project
+    }
 }
