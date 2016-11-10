@@ -1,137 +1,19 @@
 plugins {
-    id 'java'
     id 'groovy'
-    id 'maven'
-    id 'signing'
-    id 'com.jfrog.bintray' version '1.0'
+    id 'java-gradle-plugin'
+    id 'maven-publish'
+    id 'com.jfrog.bintray' version '1.7'
+    id 'com.gradle.plugin-publish' version '0.9.6'
 }
-
-if (!gradle.startParameter.taskNames.contains('release')) {
-    println "Not a release build, setting version to ${version}-SNAPSHOT"
-    version += '-SNAPSHOT'
-}
-
-repositories {
-    jcenter()
-}
-
 
 dependencies {
     compile gradleApi()
 
-    testCompile ('org.spockframework:spock-core:0.7-groovy-2.0') {
-        exclude group: 'org.codehaus.groovy'
+    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+        exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testCompile 'org.hamcrest:hamcrest-all:1.3'
+    testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
 }
 
 
-def pomDefinition = pom {
-    project {
-        name project.friendly_name
-        packaging 'jar'
-        description project.description
-        url project.home_url
-
-        scm {
-            connection "scm:git:${project.scm_url}"
-            developerConnection "scm:git:${project.scm_url}"
-            url project.scm_url
-        }
-
-        licenses {
-            license {
-                name = project.license_name
-                url project.license_url
-            }
-        }
-
-        developers {
-            developer {
-                name 'Till Krullmann'
-                email 'till.krullmann@gmx.net'
-            }
-        }
-    }
-}
-
-
-task generatePom {
-    outputs.file "$buildDir/poms/pom.xml"
-    doLast {
-        pomDefinition.writeTo "$buildDir/poms/pom.xml"
-    }
-}
-
-
-jar {
-    into("META-INF/maven/$project.group/$project.name") {
-        from generatePom
-    }
-}
-
-
-task javadocJar(type: Jar) {
-    description = 'Assembles a jar archive containing the javadocs.'
-    classifier = 'javadoc'
-    from javadoc
-}
-
-
-task sourcesJar(type: Jar) {
-    description = 'Assembles a jar archive containing the sources.'
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-
-artifacts {
-    archives javadocJar, sourcesJar
-}
-
-
-signing {
-    sign configurations.archives
-}
-
-
-install {
-    repositories.mavenInstaller {
-        beforeDeployment { deployment -> signing.signPom(deployment) }
-        pom = pomDefinition
-    }
-}
-
-
-bintray {
-    user = bintray_user
-    key = bintray_key
-    configurations = ['archives']
-
-    pkg {
-        repo = project.bintray_repo
-        name = project.name
-        desc = project.description
-        websiteUrl = project.home_url
-        licenses = ['MIT']
-        labels = ['gradle', 'plugin', 'test', 'testset']
-
-        vcsUrl = project.scm_url
-        issueTrackerUrl = project.issues_url
-        publicDownloadNumbers = true
-
-        version {
-            vcsTag = project.version
-            attributes = [
-                'gradle-plugin': "org.unbroken-dome.test-sets:${project.group}:${project.name}"
-            ]
-        }
-    }
-}
-
-
-task release(dependsOn: ['bintrayUpload']) {
-    group = 'publishing'
-} << {
-    println "Releasing $version"
-}
+apply from: "$rootDir/publishing.gradle"
