@@ -6,20 +6,21 @@ import org.gradle.api.tasks.bundling.Jar
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetContainer
 
+
 class JarTaskListener {
 
-	private final Project project;
+    private final Project project
 
 
-	JarTaskListener(Project project) {
-		this.project = project;
+    JarTaskListener(Project project) {
+        this.project = project
 
         def testSets = project.testSets as TestSetContainer
         testSets.whenObjectAdded { testSetAdded(it) }
     }
 
 
-	void testSetAdded(TestSet testSet) {
+    void testSetAdded(TestSet testSet) {
 
         def jarTask = project.tasks.create(testSet.jarTaskName, Jar) {
             from {
@@ -35,5 +36,5 @@ class JarTaskListener {
 
             map('classifier') { testSet.classifier }
         }
-	}
+    }
 }

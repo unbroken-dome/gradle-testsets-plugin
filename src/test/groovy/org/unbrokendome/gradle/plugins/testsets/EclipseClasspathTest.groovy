@@ -8,24 +8,24 @@ import spock.lang.Specification
 
 
 class EclipseClasspathTest extends Specification {
-	
-	Project project;
-	
-	
-	def setup() {
-		project = ProjectBuilder.builder().build()
-		project.apply plugin: 'eclipse'
-		project.apply plugin: 'org.unbroken-dome.test-sets'
-	}
-	
-	
-	def "Test set classpath should be added to classpath container"() {
-		when:
-			project.testSets { myTest }
-		
-		then:
-			project.eclipse.classpath
-	}
-	
+
+    Project project
+
+
+    def setup() {
+        project = ProjectBuilder.builder().build()
+        project.apply plugin: 'eclipse'
+        project.apply plugin: 'org.unbroken-dome.test-sets'
+    }
+
+
+    def "Test set classpath should be added to classpath container"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            project.eclipse.classpath
+    }
+
 
 }

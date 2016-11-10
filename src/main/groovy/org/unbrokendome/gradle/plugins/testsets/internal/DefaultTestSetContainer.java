@@ -8,32 +8,32 @@ import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetContainer;
 
 public class DefaultTestSetContainer extends AbstractNamedDomainObjectContainer<TestSet> implements TestSetContainer {
 
-	private final TestSet predefinedUnitTestSet = new PredefinedUnitTestSet();
-	
-	
-	public DefaultTestSetContainer(Instantiator instantiator) {
-		super(TestSet.class, instantiator);
-		super.add(predefinedUnitTestSet);
-	}
-	
+    private final TestSet predefinedUnitTestSet = new PredefinedUnitTestSet();
 
-	@Override
-	protected TestSet doCreate(String name) {
-		return new DefaultTestSet(name);
-	}
 
-	
-	@Override
-	public boolean add(TestSet testSet) {
-		
-		boolean added = super.add(testSet);
-		
-		if (added) {
-			if (testSet instanceof ConfigurableTestSet) {
-				((ConfigurableTestSet) testSet).extendsFrom(predefinedUnitTestSet);
-			}
-		}
-		
-		return added;
-	}
+    public DefaultTestSetContainer(Instantiator instantiator) {
+        super(TestSet.class, instantiator);
+        super.add(predefinedUnitTestSet);
+    }
+
+
+    @Override
+    protected TestSet doCreate(String name) {
+        return new DefaultTestSet(name);
+    }
+
+
+    @Override
+    public boolean add(TestSet testSet) {
+
+        boolean added = super.add(testSet);
+
+        if (added) {
+            if (testSet instanceof ConfigurableTestSet) {
+                ((ConfigurableTestSet) testSet).extendsFrom(predefinedUnitTestSet);
+            }
+        }
+
+        return added;
+    }
 }

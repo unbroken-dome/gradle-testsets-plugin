@@ -10,32 +10,33 @@ import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetContainer
 
 import java.nio.file.Paths
 
+
 class EclipseClasspathListener {
 
-	private final Project project;
+    private final Project project
 
 
-	EclipseClasspathListener(Project project) {
-		this.project = project
+    EclipseClasspathListener(Project project) {
+        this.project = project
 
         def testSets = project.testSets as TestSetContainer
         testSets.whenObjectAdded { testSetAdded(it) }
-	}
+    }
 
 
-	void testSetAdded(TestSet testSet) {
-		
-		def eclipseModel = project.extensions.findByType EclipseModel
-		if (eclipseModel) {
+    void testSetAdded(TestSet testSet) {
 
-			def eclipseClasspath = eclipseModel.classpath;
+        def eclipseModel = project.extensions.findByType EclipseModel
+        if (eclipseModel) {
+
+            def eclipseClasspath = eclipseModel.classpath
 
             addConfigurationToClasspath testSet.compileConfigurationName, eclipseClasspath
             addConfigurationToClasspath testSet.runtimeConfigurationName, eclipseClasspath
 
             applyClasspathFix eclipseClasspath
         }
-	}
+    }
 
 
     private void addConfigurationToClasspath(String configurationName, EclipseClasspath eclipseClasspath) {

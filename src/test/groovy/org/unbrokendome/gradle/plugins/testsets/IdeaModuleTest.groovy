@@ -7,7 +7,7 @@ import spock.lang.Specification
 
 class IdeaModuleTest extends Specification {
 
-    Project project;
+    Project project
 
 
     def setup() {

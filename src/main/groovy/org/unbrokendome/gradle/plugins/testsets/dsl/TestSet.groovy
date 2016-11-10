@@ -1,40 +1,43 @@
 package org.unbrokendome.gradle.plugins.testsets.dsl
 
+import org.gradle.api.Action
 import org.gradle.api.Named
-import java.util.function.Consumer
+
 
 interface TestSet extends Named {
 
-	Set<TestSet> getExtendsFrom()
+    Set<TestSet> getExtendsFrom()
 
 
-	boolean isCreateArtifact()
+    boolean isCreateArtifact()
 
 
-	String getClassifier()
+    String getClassifier()
 
 
-	String getDirName()
+    String getDirName()
 
 
-	String getTestTaskName()
+    String getTestTaskName()
 
 
-	String getJarTaskName()
+    String getJarTaskName()
 
 
-	String getSourceSetName()
+    String getSourceSetName()
 
 
-	String getCompileConfigurationName()
+    String getCompileConfigurationName()
 
 
-	String getRuntimeConfigurationName()
+    String getRuntimeConfigurationName()
 
 
-	String getArtifactConfigurationName()
+    String getArtifactConfigurationName()
 
 
-    void whenExtendsFromAdded(Consumer<TestSet> action)
-    void whenDirNameChanged(Consumer<String> action)
+    void whenExtendsFromAdded(Action<TestSet> action)
+
+
+    void whenDirNameChanged(Action<String> action)
 }

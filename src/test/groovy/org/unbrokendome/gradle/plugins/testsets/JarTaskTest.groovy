@@ -12,20 +12,21 @@ import spock.lang.Specification
 
 
 class JarTaskTest extends Specification {
-	
-	Project project;
-	
-	
-	def setup() {
-		project = ProjectBuilder.builder().build()
-		project.apply plugin: 'org.unbroken-dome.test-sets'
-	}
-	
-	
-	def "New test set should have associated jar task"() {
-		when:
-			project.testSets { myTest }
-		then:
-			project.tasks['myTestJar'] instanceof Jar
-	}
+
+    Project project
+
+
+    def setup() {
+        project = ProjectBuilder.builder().build()
+        project.apply plugin: 'org.unbroken-dome.test-sets'
+    }
+
+
+    def "New test set should have associated jar task"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            project.tasks['myTestJar'] instanceof Jar
+    }
 }

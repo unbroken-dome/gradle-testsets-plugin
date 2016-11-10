@@ -10,13 +10,14 @@ import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetContainer
 
 import java.nio.file.Paths
 
+
 public class IdeaModuleListener {
 
-    final Project project;
+    final Project project
 
 
     public IdeaModuleListener(Project project) {
-        this.project = project;
+        this.project = project
 
         def testSets = project.testSets as TestSetContainer
         testSets.whenObjectAdded { testSetAdded(it) }
