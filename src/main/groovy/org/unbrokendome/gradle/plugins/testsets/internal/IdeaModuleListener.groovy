@@ -33,11 +33,21 @@ public class IdeaModuleListener {
 
             def sourceSet = project.sourceSets[testSet.sourceSetName] as SourceSet
 
-            ideaModule.testSourceDirs += sourceSet.allJava.srcDirs
+            def srcDirs = sourceSet.allJava.srcDirs
+            ideaModule.testSourceDirs += srcDirs
+            testSet.whenDirNameChanged {
+                ideaModule.testSourceDirs -= srcDirs
+                ideaModule.testSourceDirs += sourceSet.allJava.srcDirs
+            }
 
             def groovySourceSet = new DslObject(sourceSet).convention.findPlugin(GroovySourceSet)
             if (groovySourceSet) {
-                ideaModule.testSourceDirs += groovySourceSet.allGroovy.srcDirs
+                def groovySrcDirs = groovySourceSet.allGroovy.srcDirs
+                ideaModule.testSourceDirs += groovySrcDirs
+                testSet.whenDirNameChanged {
+                    ideaModule.testSourceDirs -= groovySrcDirs
+                    ideaModule.testSourceDirs += groovySourceSet.allGroovy.srcDirs
+                }
             }
 
             ideaModule.iml.withXml {
@@ -80,7 +90,7 @@ public class IdeaModuleListener {
         ideaModule.iml.whenMerged { Module module ->
 
             // Get all output directories for other source sets' classes and resources.
-            def outputPaths = ideaModule.project.sourceSets*.output
+            def outputPaths = project.sourceSets*.output
                     .collect { [ it.classesDir, it.resourcesDir ]}
                     .flatten { file -> Paths.get(file as String) } as Set
 
