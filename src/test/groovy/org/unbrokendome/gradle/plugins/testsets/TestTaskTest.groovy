@@ -34,7 +34,7 @@ class TestTaskTest extends Specification {
         then:
             def testTask = project.tasks['myTest'] as Test
             def htmlReportDir = project.file(testTask.reports.html.destination)
-            htmlReportDir == new File(project.buildDir, 'myTest')
+            htmlReportDir == new File(project.testReportDir, 'myTest')
     }
 
 
@@ -44,7 +44,7 @@ class TestTaskTest extends Specification {
 
         then:
             def testTask = project.tasks['myTest'] as Test
-            def htmlReportDir = project.file(testTask.reports.junitXml.destination)
-            htmlReportDir == new File(project.buildDir, 'myTest-results')
+            def junitXmlReportDir = project.file(testTask.reports.junitXml.destination)
+            junitXmlReportDir == new File(project.testResultsDir, 'myTest-results')
     }
 }

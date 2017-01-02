@@ -40,7 +40,7 @@ class TestTaskListener {
             }
         }
 
-        testTask.reports.html.destination = new File(project.buildDir, testSet.name)
-        testTask.reports.junitXml.destination = new File(project.buildDir, "${testSet.name}-results")
+        testTask.reports.html.destination = new File(project.testReportDir, testSet.name)
+        testTask.reports.junitXml.destination = new File(project.testResultsDir, "${testSet.name}-results")
     }
 }
