@@ -45,6 +45,6 @@ class TestTaskTest extends Specification {
         then:
             def testTask = project.tasks['myTest'] as Test
             def junitXmlReportDir = project.file(testTask.reports.junitXml.destination)
-            junitXmlReportDir == new File(project.testResultsDir, 'myTest-results')
+            assert junitXmlReportDir == new File(project.testResultsDir, 'myTest')
     }
 }
