@@ -139,7 +139,7 @@ thrown into a shared "Gradle classpath container".
 
 If your project applies the `idea` plugin, the TestSets plugin will add the source set root directories as source folders
 to your IDEA module and mark them as "test sources root" (these folders will be marked with a green folder icon in the
-project view).
+project view). In order for IDEA to automatically create the test directories make sure the *Create directories for empty content roots automatically* checkbox within your Gradle settings is checked.
 
 Dependencies for each test set are added under TEST scope (which is the same scope that is used for unit tests).
 
