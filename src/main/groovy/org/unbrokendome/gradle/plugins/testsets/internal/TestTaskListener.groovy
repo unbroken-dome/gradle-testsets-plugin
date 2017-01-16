@@ -39,8 +39,5 @@ class TestTaskListener {
                 sourceSet.runtimeClasspath
             }
         }
-
-        testTask.reports.html.destination = new File(project.buildDir, testSet.name)
-        testTask.reports.junitXml.destination = new File(project.buildDir, "${testSet.name}-results")
     }
 }
