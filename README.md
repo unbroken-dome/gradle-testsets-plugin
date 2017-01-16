@@ -123,8 +123,7 @@ The plugin supports Eclipse and IntelliJ IDEA through the `eclipse` and `idea` p
 a project, each test set's source sets and dependencies will be added to the Eclipse/IDEA project.
 
 Neither Eclipse nor IntelliJ IDEA support the notion of multiple test sets per project / module, so what the plugin does
-is only a "best fit" so you can at least run the tests from your IDE. These tests will never be executed in isolation,
-however, which may become an issue if you have files of the same name (e.g. log4j2-test.xml) in different source sets.
+is only a "best fit" so you can at least run the tests from your IDE.
 
 ### Eclipse
 
@@ -132,15 +131,35 @@ If your project applies the `eclipse` plugin, the TestSets plugin will automatic
 to the classpath. SourceSets that are generated for a test set are automatically mapped to source folders in Eclipse,
 without any further configuration. (Eclipse does not distinguish between production and test source folders.)
 
+That means that tests will never be executed in isolation, however, which may become an issue if you have files of the
+same name (e.g. log4j2-test.xml) in different source sets.
+
 Eclipse does not support different scopes for dependencies; all dependencies (main, test and additional test sets) are
 thrown into a shared "Gradle classpath container".
 
 ### IntelliJ IDEA
 
+The Gradle support in IntelliJ IDEA has undergone some changes since it was first added.
+
+#### 2016.1 and later
+
+In version 2016.1 IntelliJ IDEA introduced the possibility of creating a separate module for each source set (the option
+is found under *Settings -> Build Tools -> Gradle* or when creating or importing a Gradle project).
+It is strongly recommended to use this option with the TestSets plugin.
+
+A small downside is that it seems not possible to mark source sets as test code. These tests can be run fine, but
+ will show the blue (instead of green) folder icon, and will show up in search results as "production" rather than
+ "test" code.
+
+#### Pre-2016
+
+Early versions of the IntelliJ Gradle integration made use of Gradle's *idea* plugin to generate its project and module
+descriptors, allowing other Gradle plugins to hook into this generation process.
+
 If your project applies the `idea` plugin, the TestSets plugin will add the source set root directories as source folders
 to your IDEA module and mark them as "test sources root" (these folders will be marked with a green folder icon in the
-project view). In order for IDEA to automatically create the test directories make sure the *Create directories for empty content roots automatically* checkbox within your Gradle settings is checked.
+project view). In order for IDEA to automatically create the test directories make sure the
+*Create directories for empty content roots automatically* checkbox within your Gradle settings is checked.
 
 Dependencies for each test set are added under TEST scope (which is the same scope that is used for unit tests).
-
 
