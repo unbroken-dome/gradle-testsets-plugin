@@ -23,17 +23,14 @@ class JarTaskListener {
     void testSetAdded(TestSet testSet) {
 
         def jarTask = project.tasks.create(testSet.jarTaskName, Jar) {
+            description = "Assembles a jar archive containing the ${testSet.name} classes."
+            group = BasePlugin.BUILD_GROUP
             from {
                 project.sourceSets[testSet.sourceSetName].output
             }
         }
 
         jarTask.conventionMapping.with {
-
-            map('description') { "Assembles a jar archive containing the ${testSet.name} classes." }
-
-            map('group') { BasePlugin.BUILD_GROUP }
-
             map('classifier') { testSet.classifier }
         }
     }

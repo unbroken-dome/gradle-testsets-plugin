@@ -22,12 +22,12 @@ class TestTaskListener {
 
 
     void testSetAdded(TestSet testSet) {
-        def testTask = project.tasks.create testSet.testTaskName, Test
+        def testTask = project.tasks.create(testSet.testTaskName, Test) {
+            group = JavaBasePlugin.VERIFICATION_GROUP
+            description = "Runs the ${testSet.name} tests"
+        }
 
         testTask.conventionMapping.with {
-            map('description') { "Runs the ${testSet.name} tests" }
-
-            map('group') { JavaBasePlugin.VERIFICATION_GROUP }
 
             map('testClassesDir') {
                 def sourceSet = (SourceSet) project.sourceSets[testSet.sourceSetName]
