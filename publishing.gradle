@@ -4,8 +4,10 @@ if (!gradle.startParameter.taskNames.contains('release')) {
 }
 
 
-tasks.create('release') << {
-    println "Releasing $version"
+tasks.create('release') {
+    doLast {
+        println "Releasing $version"
+    }
 }
 
 
