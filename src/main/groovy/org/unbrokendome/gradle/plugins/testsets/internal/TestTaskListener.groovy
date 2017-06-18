@@ -29,9 +29,18 @@ class TestTaskListener {
 
         testTask.conventionMapping.with {
 
-            map('testClassesDir') {
-                def sourceSet = (SourceSet) project.sourceSets[testSet.sourceSetName]
-                sourceSet.output.classesDir
+            if (testTask.metaClass.respondsTo(testTask, "getTestClassesDirs")) {
+                // Gradle 4.0+
+                // See https://docs.gradle.org/4.0/release-notes.html#detecting-test-classes-for-custom-test-tasks
+                map('testClassesDirs') {
+                    def sourceSet = (SourceSet) project.sourceSets[testSet.sourceSetName]
+                    sourceSet.output.classesDirs
+                }
+            } else {
+                map('testClassesDir') {
+                    def sourceSet = (SourceSet) project.sourceSets[testSet.sourceSetName]
+                    sourceSet.output.classesDir
+                }
             }
 
             map('classpath') {
