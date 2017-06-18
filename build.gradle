@@ -8,6 +8,12 @@ plugins {
 
 targetCompatibility = 1.7
 
+
+repositories {
+    jcenter()
+}
+
+
 dependencies {
     compile gradleApi()
 
