@@ -59,7 +59,7 @@ class EclipseClasspathListener {
 
             // Get all output directories for other source sets' classes and resources.
             def outputPaths = eclipseClasspath.project.sourceSets*.output
-                    .collect { [ it.classesDir, it.resourcesDir ]}
+                    .collect { it.classesDirs + [it.resourcesDir] }
                     .flatten { file -> Paths.get(file as String) } as Set
             classpath.entries.removeAll { ClasspathEntry entry ->
                 entry.kind == 'lib' && Paths.get(entry.path) in outputPaths

@@ -91,7 +91,7 @@ public class IdeaModuleListener {
 
             // Get all output directories for other source sets' classes and resources.
             def outputPaths = project.sourceSets*.output
-                    .collect { [ it.classesDir, it.resourcesDir ]}
+                    .collect { it.classesDirs + [it.resourcesDir] }
                     .flatten { file -> Paths.get(file as String) } as Set
 
             module.dependencies.removeAll { dep ->

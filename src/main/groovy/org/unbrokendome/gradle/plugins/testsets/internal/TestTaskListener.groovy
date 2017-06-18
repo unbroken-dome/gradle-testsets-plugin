@@ -29,9 +29,9 @@ class TestTaskListener {
 
         testTask.conventionMapping.with {
 
-            map('testClassesDir') {
+            map('testClassesDirs') {
                 def sourceSet = (SourceSet) project.sourceSets[testSet.sourceSetName]
-                sourceSet.output.classesDir
+                sourceSet.output.classesDirs
             }
 
             map('classpath') {
