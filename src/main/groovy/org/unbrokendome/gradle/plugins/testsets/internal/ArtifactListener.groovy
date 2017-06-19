@@ -28,8 +28,8 @@ class ArtifactListener {
 
                 def jarTask = project.tasks.findByName(testSet.jarTaskName)
 
-                project.artifacts.add(testSet.artifactConfigurationName, jarTask) {
-                    classifier = testSet.classifier
+                project.artifacts.add(testSet.artifactConfigurationName, jarTask) { artifact ->
+                    artifact.classifier = testSet.classifier
                 }
             }
         }

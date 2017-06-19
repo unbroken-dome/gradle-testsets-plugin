@@ -30,7 +30,7 @@ class DefaultTestSetContainer extends AbstractNamedDomainObjectContainer<TestSet
 
         if (added) {
             if (testSet instanceof ConfigurableTestSet) {
-                ((ConfigurableTestSet) testSet).extendsFrom(predefinedUnitTestSet);
+                ((ConfigurableTestSet) testSet).extendsFrom(predefinedUnitTestSet)
             }
         }
 

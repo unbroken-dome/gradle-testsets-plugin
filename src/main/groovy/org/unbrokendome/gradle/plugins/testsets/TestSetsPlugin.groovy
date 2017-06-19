@@ -8,13 +8,15 @@ import org.unbrokendome.gradle.plugins.testsets.internal.*
 
 import javax.inject.Inject
 
-public class TestSetsPlugin implements Plugin<Project> {
+class TestSetsPlugin implements Plugin<Project> {
+
+    static final TESTSETS_EXTENSION_NAME = 'testSets'
 
     private final Instantiator instantiator
 
 
     @Inject
-    public TestSetsPlugin(Instantiator instantiator) {
+    TestSetsPlugin(Instantiator instantiator) {
         this.instantiator = instantiator
     }
 
@@ -23,7 +25,7 @@ public class TestSetsPlugin implements Plugin<Project> {
     void apply(Project project) {
         project.apply plugin: JavaPlugin
 
-        project.extensions.create('testSets', DefaultTestSetContainer, instantiator)
+        project.extensions.create(TESTSETS_EXTENSION_NAME, DefaultTestSetContainer, instantiator)
 
         instantiator.newInstance SourceSetListener, project
         instantiator.newInstance ConfigurationDependencyListener, project
