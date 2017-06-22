@@ -55,8 +55,7 @@ class TestTaskTest extends Specification {
 
         then:
             def testTask = project.tasks['myTest'] as Test
-            testTask.testClassesDirs[0] == project.sourceSets.test.output.classesDirs.singleFile
-            testTask.testClassesDirs[1] == project.sourceSets.myTest.output.classesDirs.singleFile
-            testTask.testClassesDirs.files.size() == 2
+            testTask.testClassesDirs[0] == project.sourceSets.myTest.output.classesDirs.singleFile
+            testTask.testClassesDirs.files.size() == 1
     }
 }

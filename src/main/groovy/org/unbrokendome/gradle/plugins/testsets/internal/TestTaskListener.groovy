@@ -33,7 +33,7 @@ class TestTaskListener {
                 // Gradle 4.0+
                 // See https://docs.gradle.org/4.0/release-notes.html#detecting-test-classes-for-custom-test-tasks
                 def sourceSet = project.sourceSets[testSet.sourceSetName]
-                testTask.testClassesDirs += sourceSet.output.classesDirs
+                testTask.testClassesDirs = sourceSet.output.classesDirs
             } else {
                 map('testClassesDir') {
                     def sourceSet = (SourceSet) project.sourceSets[testSet.sourceSetName]
