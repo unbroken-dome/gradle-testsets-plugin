@@ -47,4 +47,15 @@ class TestTaskTest extends Specification {
             def junitXmlReportDir = project.file(testTask.reports.junitXml.destination)
             junitXmlReportDir == new File(project.testResultsDir, 'myTest')
     }
+
+
+    def "testClassesDirs should include the custom test set (in Gradle 4.0)"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            def testTask = project.tasks['myTest'] as Test
+            testTask.testClassesDirs[0] == project.sourceSets.myTest.output.classesDirs.singleFile
+            testTask.testClassesDirs.files.size() == 1
+    }
 }
