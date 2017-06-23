@@ -49,13 +49,27 @@ class PredefinedUnitTestSet extends AbstractTestSet {
 
     @Override
     String getCompileConfigurationName() {
-        JavaPlugin.TEST_COMPILE_CONFIGURATION_NAME
+        //Make sure to be compatible with older versions of gradle that may not
+        //have the compile classpath configuration
+        /**if (JavaPlugin.hasProperty("TEST_COMPILE_CLASSPATH_CONFIGURATION_NAME")) {
+            JavaPlugin.TEST_COMPILE_CLASSPATH_CONFIGURATION_NAME
+        } else {
+            JavaPlugin.TEST_COMPILE_CONFIGURATION_NAME
+        }**/
+        JavaPlugin.TEST_COMPILE_CLASSPATH_CONFIGURATION_NAME
     }
 
 
     @Override
     String getRuntimeConfigurationName() {
-        JavaPlugin.TEST_RUNTIME_CONFIGURATION_NAME
+        //Make sure to be compatible with older versions of gradle that may not
+        //have the runtime classpath configuration
+        /**if (JavaPlugin.hasProperty("TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME")) {
+            JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME
+        } else {
+            JavaPlugin.TEST_RUNTIME_CONFIGURATION_NAME
+        }**/
+        JavaPlugin.TEST_RUNTIME_CLASSPATH_CONFIGURATION_NAME
     }
 
 
