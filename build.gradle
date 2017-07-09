@@ -14,13 +14,38 @@ repositories {
 }
 
 
-dependencies {
-    compile gradleApi()
+sourceSets {
+    integrationTest
+}
 
+
+configurations {
+    integrationTestCompile.extendsFrom testCompile
+    integrationTestImplementation.extendsFrom testImplementation
+    integrationTestRuntime.extendsFrom testRuntime
+    integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+
+dependencies {
     testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+}
+
+
+gradlePlugin {
+    testSourceSets sourceSets.integrationTest
+}
+
+
+task integrationTest(type: Test) {
+    dependsOn pluginUnderTestMetadata
+    group = 'verification'
+    description = 'Runs the integration tests.'
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
 
