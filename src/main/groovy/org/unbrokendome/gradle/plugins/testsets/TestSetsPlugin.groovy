@@ -25,7 +25,7 @@ class TestSetsPlugin implements Plugin<Project> {
     void apply(Project project) {
         project.apply plugin: JavaPlugin
 
-        project.extensions.create(TESTSETS_EXTENSION_NAME, DefaultTestSetContainer, instantiator)
+        project.extensions.create(TESTSETS_EXTENSION_NAME, DefaultTestSetContainer, instantiator, project)
 
         instantiator.newInstance SourceSetListener, project
         instantiator.newInstance ConfigurationDependencyListener, project

@@ -26,12 +26,25 @@ class ConfigurationDependencyListener {
 
     void extendsFromAdded(TestSet testSet, TestSet superTestSet) {
         addConfigurationExtension testSet.compileConfigurationName, superTestSet.compileConfigurationName
+        addConfigurationExtension testSet.implementationConfigurationName, superTestSet.implementationConfigurationName
         addConfigurationExtension testSet.runtimeConfigurationName, superTestSet.runtimeConfigurationName
+        addConfigurationExtension testSet.runtimeOnlyConfigurationName, superTestSet.runtimeOnlyConfigurationName
     }
 
 
     private void addConfigurationExtension(String configurationName, String superConfigurationName) {
+
+        if (!configurationName || !superConfigurationName) {
+            return
+        }
+
         ConfigurationContainer configurations = project.configurations
-        configurations[configurationName].extendsFrom configurations[superConfigurationName]
+
+        def configuration = configurations.findByName(configurationName)
+        def superConfiguration = configurations.findByName(superConfigurationName)
+
+        if (configuration != null && superConfiguration != null) {
+            configuration.extendsFrom superConfiguration
+        }
     }
 }

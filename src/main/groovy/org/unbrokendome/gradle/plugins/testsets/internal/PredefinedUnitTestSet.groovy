@@ -1,14 +1,24 @@
 package org.unbrokendome.gradle.plugins.testsets.internal
 
+import groovy.transform.CompileStatic
 import org.gradle.api.Action
+import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
+import org.gradle.util.VersionNumber
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
 
 
 class PredefinedUnitTestSet extends AbstractTestSet {
 
     static final String NAME = "unitTest"
+
+    private final VersionNumber gradleVersion
+
+
+    PredefinedUnitTestSet(Project project) {
+        gradleVersion = VersionNumber.parse(project.gradle.gradleVersion)
+    }
 
 
     @Override
@@ -54,8 +64,29 @@ class PredefinedUnitTestSet extends AbstractTestSet {
 
 
     @Override
+    String getImplementationConfigurationName() {
+        if (gradleVersion >= VersionNumber.parse('3.4')) {
+            return JavaPlugin.TEST_IMPLEMENTATION_CONFIGURATION_NAME
+        } else {
+            return null
+        }
+    }
+
+
+    @Override
     String getRuntimeConfigurationName() {
+        //noinspection GrDeprecatedAPIUsage
         JavaPlugin.TEST_RUNTIME_CONFIGURATION_NAME
+    }
+
+
+    @Override
+    String getRuntimeOnlyConfigurationName() {
+        if (gradleVersion >= VersionNumber.parse('3.4')) {
+            return JavaPlugin.TEST_RUNTIME_ONLY_CONFIGURATION_NAME
+        } else {
+            return null
+        }
     }
 
 

@@ -6,7 +6,7 @@ import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
 
-public class PredefinedUnitTestSetTest extends Specification {
+class PredefinedUnitTestSetTest extends Specification {
 
     Project project
 
@@ -35,9 +35,21 @@ public class PredefinedUnitTestSetTest extends Specification {
     }
 
 
+    def "Predefined 'unitTest' test set has implementation configuration 'testImplementation'"() {
+        expect:
+            project.testSets['unitTest'].implementationConfigurationName == 'testImplementation'
+    }
+
+
     def "Predefined 'unitTest' test set has runtime configuration 'testRuntime'"() {
         expect:
             project.testSets['unitTest'].runtimeConfigurationName == 'testRuntime'
+    }
+
+
+    def "Predefined 'unitTest' test set has runtimeOnly configuration 'testRuntimeOnly'"() {
+        expect:
+            project.testSets['unitTest'].runtimeOnlyConfigurationName == 'testRuntimeOnly'
     }
 
 

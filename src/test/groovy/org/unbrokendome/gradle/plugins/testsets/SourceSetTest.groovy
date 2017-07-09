@@ -6,7 +6,7 @@ import org.gradle.testfixtures.ProjectBuilder
 import spock.lang.Specification
 
 
-public class SourceSetTest extends Specification {
+class SourceSetTest extends Specification {
 
     Project project
 
@@ -35,12 +35,30 @@ public class SourceSetTest extends Specification {
     }
 
 
+    def "New test set should have an associated implementation configuration"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            project.configurations['myTestImplementation']
+    }
+
+
     def "New test set should have an associated runtime configuration"() {
         when:
             project.testSets { myTest }
 
         then:
             project.configurations['myTestRuntime']
+    }
+
+
+    def "New test set should have an associated runtime-only configuration"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            project.configurations['myTestRuntimeOnly']
     }
 
 

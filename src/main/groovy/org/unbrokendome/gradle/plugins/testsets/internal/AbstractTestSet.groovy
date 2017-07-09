@@ -29,9 +29,20 @@ abstract class AbstractTestSet implements TestSet {
     }
 
 
+    String getImplementationConfigurationName() {
+        "${name}Implementation"
+    }
+
+
     @Override
     String getRuntimeConfigurationName() {
         "${name}Runtime"
+    }
+
+
+    @Override
+    String getRuntimeOnlyConfigurationName() {
+        "${name}RuntimeOnly"
     }
 
 
