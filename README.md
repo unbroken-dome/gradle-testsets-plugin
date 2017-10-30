@@ -47,7 +47,7 @@ The test set is a logical grouping of the following:
 - a [Jar](http://gradle.org/docs/current/userguide/java_plugin.html#N12A7C) task to package the tests;
 - optionally, an [artifact](http://gradle.org/docs/current/userguide/artifact_management.html) that can be published.
 
-To define a new test set, use the `testSets` DSL in the project:
+To define a new test set, use the `testSets` DSL in the project's build.gradle file, like this:
 
 ```groovy
 testSets {
@@ -55,9 +55,7 @@ testSets {
 }
 ```
 
-Where "integrationTest" would be the name of the test set.
-
-This would automatically create the following objects:
+In this example "integrationTest" is the name of the test set being created. As part of the process, the TestSets plugin will automatically create the following objects:
 
 * A source set named "integrationTest";
 * A dependency configuration named "integrationTestCompile", which extends from "testCompile";
@@ -68,7 +66,7 @@ This would automatically create the following objects:
 
 ### Extending other test sets
 
-A test set can extend other test sets. This makes the test set's `compile` and `runtime` configurations extend the other test set's `compile` and `runtime` configurations, respectively.
+A test set can extend other test sets. This means the test set's `compile` and `runtime` configurations extend the "parent" test set's `compile` and `runtime` configurations, respectively.
 
 ```groovy
 testSets {
@@ -78,7 +76,7 @@ testSets {
 ```
 
 It does _not_ mean, however, that the source (classes / resources) of the extended test set will be available to the
-extending test set. For this you would still have to create a dependency:
+extending test set. For this you must explicitly create a dependency:
 
 ```groovy
 dependencies {
@@ -88,7 +86,7 @@ dependencies {
 
 ### Predefined unit test set
 
-The `java` and `groovy` plugins automatically define a source set named "test" to hold unit tests, as well as "testCompile" and "testRuntime" configurations to declare its dependencies, and a "test" task to run the tests. The TestSets plugin logically groups these into a predefined test set called "unitTest".
+The `java` and `groovy` plugins automatically define a source set named "test" to hold unit tests, "testCompile" and "testRuntime" configurations to declare its dependencies, and a "test" task to run the tests. The TestSets plugin logically groups these into a predefined test set called "unitTest".
 
 All new test sets implicitly extend the "unitTest" set, meaning that every test set's `compile` configuration will automatically extend `testCompile`, and every test set's `runtime` configuration will extend `testRuntime`.
 
@@ -101,7 +99,7 @@ testSets {
     myTest { dirName = 'my-test' }
 }
 ```
-    
+
 Which would change the source set's java and resources directories to `src/my-test/java` and `src/my-test/resources`, respectively. This also works with the `groovy` source directory, if the `groovy` plugin is applied to the project.
 
 ### Publishing an artifact
@@ -113,7 +111,7 @@ testSets {
     integrationTest { createArtifact = true }
 }
 ```
-    
+
 This will add the artifact `<projectName>-integrationTest.jar` to the project's artifacts.
 
 
@@ -162,4 +160,3 @@ project view). In order for IDEA to automatically create the test directories ma
 *Create directories for empty content roots automatically* checkbox within your Gradle settings is checked.
 
 Dependencies for each test set are added under TEST scope (which is the same scope that is used for unit tests).
-
