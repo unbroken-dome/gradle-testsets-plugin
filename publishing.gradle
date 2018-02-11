@@ -1,4 +1,4 @@
-if (!gradle.startParameter.taskNames.contains('release')) {
+if (!gradle.startParameter.taskNames.intersect(['release', 'releaseBintray'])) {
     println "Not a release build, setting version to ${project.version}-SNAPSHOT"
     project.version += '-SNAPSHOT'
 }
@@ -9,6 +9,8 @@ tasks.create('release') {
         println "Releasing $version"
     }
 }
+
+tasks.create('releaseBintray')
 
 
 project.plugins.withId('maven-publish') {
@@ -80,7 +82,8 @@ project.plugins.withId('com.jfrog.bintray') {
         }
     }
 
-    tasks['release'].dependsOn tasks.bintrayUpload
+    tasks.releaseBintray.dependsOn tasks.bintrayUpload
+    tasks.release.dependsOn tasks.releaseBintray
 }
 
 
@@ -99,5 +102,5 @@ project.plugins.withId('com.gradle.plugin-publish') {
         }
     }
 
-    tasks['release'].dependsOn tasks.publishPlugins
+    tasks.release.dependsOn tasks.publishPlugins
 }
