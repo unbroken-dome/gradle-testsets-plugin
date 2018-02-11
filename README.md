@@ -12,7 +12,7 @@ To use the TestSets plugin, include either of the following in your build script
 
 ```groovy
 plugins {
-    id 'org.unbroken-dome.test-sets' version '1.4.2'
+    id 'org.unbroken-dome.test-sets' version '1.4.3'
 }
 ```
 
@@ -24,7 +24,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:1.4.2'
+        classpath 'org.unbroken-dome.gradle-plugins:gradle-testsets-plugin:1.4.3'
     }
 }
 
