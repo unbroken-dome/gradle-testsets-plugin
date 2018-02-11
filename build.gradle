@@ -32,6 +32,8 @@ dependencies {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
     testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+
+    testRuntimeOnly 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.21'
 }
 
 

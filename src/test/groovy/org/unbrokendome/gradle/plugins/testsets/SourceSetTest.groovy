@@ -105,4 +105,16 @@ class SourceSetTest extends Specification {
         then:
             project.sourceSets['myTest'].groovy.srcDirs == [ project.file('src/my-test/groovy') ] as Set
     }
+
+
+    def "Source set should use test set's dirName for kotlin srcDir if given"() {
+        when:
+            project.apply plugin: 'org.jetbrains.kotlin.jvm'
+            project.testSets {
+                myTest { dirName = 'my-test' }
+            }
+
+        then:
+            project.sourceSets['myTest'].kotlin.srcDirs == [ project.file('src/my-test/kotlin') ] as Set
+    }
 }

@@ -1,6 +1,7 @@
 package org.unbrokendome.gradle.plugins.testsets.internal
 
 import org.gradle.api.Project
+import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.plugins.DslObject
 import org.gradle.api.tasks.GroovySourceSet
 import org.gradle.api.tasks.SourceSet
@@ -53,6 +54,7 @@ class SourceSetListener {
         applyJavaSrcDir(sourceSet, dirName)
         applyResourcesSrcDir(sourceSet, dirName)
         applyGroovySrcDir(sourceSet, dirName)
+        applyKotlinSrcDir(sourceSet, dirName)
     }
 
 
@@ -70,6 +72,14 @@ class SourceSetListener {
         def groovySourceSet = new DslObject(sourceSet).convention.findPlugin GroovySourceSet
         if (groovySourceSet != null) {
             groovySourceSet.groovy.srcDirs = [ "src/$dirName/groovy" ]
+        }
+    }
+
+
+    private void applyKotlinSrcDir(SourceSet sourceSet, String dirName) {
+        if (sourceSet.hasProperty('kotlin')) {
+            def kotlinSourceDirSet = (SourceDirectorySet) sourceSet.kotlin
+            kotlinSourceDirSet.srcDirs = [ "src/$dirName/kotlin" ]
         }
     }
 }
