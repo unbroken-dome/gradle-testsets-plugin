@@ -20,18 +20,16 @@ sourceSets {
 
 
 configurations {
-    integrationTestCompile.extendsFrom testCompile
     integrationTestImplementation.extendsFrom testImplementation
-    integrationTestRuntime.extendsFrom testRuntime
     integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }
 
 
 dependencies {
-    testCompile('org.spockframework:spock-core:1.0-groovy-2.4') {
+    testImplementation('org.spockframework:spock-core:1.0-groovy-2.4') {
         exclude group: 'org.codehaus.groovy', module: 'groovy-all'
     }
-    testCompile 'org.hamcrest:java-hamcrest:2.0.0.0'
+    testImplementation 'org.hamcrest:java-hamcrest:2.0.0.0'
 
     testRuntimeOnly 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.2.21'
 }
