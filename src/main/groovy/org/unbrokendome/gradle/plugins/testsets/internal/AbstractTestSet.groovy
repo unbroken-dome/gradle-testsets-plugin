@@ -29,6 +29,12 @@ abstract class AbstractTestSet implements TestSet {
     }
 
 
+    @Override
+    String getCompileOnlyConfigurationName() {
+        "${name}CompileOnly"
+    }
+
+
     String getImplementationConfigurationName() {
         "${name}Implementation"
     }

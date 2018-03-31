@@ -35,6 +35,12 @@ class PredefinedUnitTestSetTest extends Specification {
     }
 
 
+    def "Predefined 'unitTest' test set has compile-only configuration 'testCompileOnly'"() {
+        expect:
+            project.testSets['unitTest'].compileOnlyConfigurationName == 'testCompileOnly'
+    }
+
+
     def "Predefined 'unitTest' test set has implementation configuration 'testImplementation'"() {
         expect:
             project.testSets['unitTest'].implementationConfigurationName == 'testImplementation'

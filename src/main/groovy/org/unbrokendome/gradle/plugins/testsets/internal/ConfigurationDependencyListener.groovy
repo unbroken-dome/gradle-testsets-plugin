@@ -26,6 +26,7 @@ class ConfigurationDependencyListener {
 
     void extendsFromAdded(TestSet testSet, TestSet superTestSet) {
         addConfigurationExtension testSet.compileConfigurationName, superTestSet.compileConfigurationName
+        addConfigurationExtension testSet.compileOnlyConfigurationName, superTestSet.compileOnlyConfigurationName
         addConfigurationExtension testSet.implementationConfigurationName, superTestSet.implementationConfigurationName
         addConfigurationExtension testSet.runtimeConfigurationName, superTestSet.runtimeConfigurationName
         addConfigurationExtension testSet.runtimeOnlyConfigurationName, superTestSet.runtimeOnlyConfigurationName
