@@ -42,6 +42,15 @@ public class TestsPluginTest extends Specification {
     }
 
 
+    def "New test set's annotation-processor configuration should extend the testAnnotationProcessor configuration"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            project.configurations['myTestAnnotationProcessor'].extendsFrom == [ project.configurations['testAnnotationProcessor'] ].toSet()
+    }
+
+
     def "New test set should have an associated runtime configuration"() {
         when:
             project.testSets { myTest }

@@ -35,6 +35,12 @@ abstract class AbstractTestSet implements TestSet {
     }
 
 
+    @Override
+    String getAnnotationProcessorConfigurationName() {
+        "${name}AnnotationProcessor"
+    }
+
+
     String getImplementationConfigurationName() {
         "${name}Implementation"
     }

@@ -41,6 +41,12 @@ class PredefinedUnitTestSetTest extends Specification {
     }
 
 
+    def "Predefined 'unitTest' test set has annotation-processor configuration 'testAnnotationProcessor'"() {
+        expect:
+            project.testSets['unitTest'].annotationProcessorConfigurationName == 'testAnnotationProcessor'
+    }
+
+
     def "Predefined 'unitTest' test set has implementation configuration 'testImplementation'"() {
         expect:
             project.testSets['unitTest'].implementationConfigurationName == 'testImplementation'
