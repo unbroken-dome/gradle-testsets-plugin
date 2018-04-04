@@ -64,6 +64,26 @@ class PredefinedUnitTestSet extends AbstractTestSet {
 
 
     @Override
+    String getCompileOnlyConfigurationName() {
+        if (gradleVersion >= VersionNumber.parse('2.12')) {
+            return JavaPlugin.TEST_COMPILE_ONLY_CONFIGURATION_NAME;
+        } else {
+            return null
+        }
+    }
+
+
+    @Override
+    String getAnnotationProcessorConfigurationName() {
+        if (gradleVersion >= VersionNumber.parse('4.6')) {
+            return JavaPlugin.TEST_ANNOTATION_PROCESSOR_CONFIGURATION_NAME;
+        } else {
+            return null
+        }
+    }
+
+
+    @Override
     String getImplementationConfigurationName() {
         if (gradleVersion >= VersionNumber.parse('3.4')) {
             return JavaPlugin.TEST_IMPLEMENTATION_CONFIGURATION_NAME

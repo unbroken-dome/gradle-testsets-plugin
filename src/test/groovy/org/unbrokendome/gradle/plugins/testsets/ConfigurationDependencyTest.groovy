@@ -32,6 +32,8 @@ class ConfigurationDependencyTest extends Specification {
         where:
             configurationBaseName | extendedConfigurationName | extendingConfigurationName
             'compile'             | 'fooCompile'              | 'barCompile'
+            'compileOnly'         | 'fooCompileOnly'          | 'barCompileOnly'
+            'annotationProcessor' | 'fooAnnotationProcessor'  | 'barAnnotationProcessor'
             'implementation'      | 'fooImplementation'       | 'barImplementation'
             'runtime'             | 'fooRuntime'              | 'barRuntime'
             'runtimeOnly'         | 'fooRuntimeOnly'          | 'barRuntimeOnly'

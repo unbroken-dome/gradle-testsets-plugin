@@ -35,6 +35,24 @@ class SourceSetTest extends Specification {
     }
 
 
+    def "New test set should have an associated compile-only configuration"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            project.configurations['myTestCompileOnly']
+    }
+
+
+    def "New test set should have an associated annotation-processor configuration"() {
+        when:
+            project.testSets { myTest }
+
+        then:
+            project.configurations['myTestAnnotationProcessor']
+    }
+
+
     def "New test set should have an associated implementation configuration"() {
         when:
             project.testSets { myTest }

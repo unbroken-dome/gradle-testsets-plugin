@@ -30,6 +30,12 @@ interface TestSet extends Named {
     String getCompileConfigurationName()
 
 
+    String getCompileOnlyConfigurationName()
+
+
+    String getAnnotationProcessorConfigurationName()
+
+
     String getImplementationConfigurationName()
 
 
