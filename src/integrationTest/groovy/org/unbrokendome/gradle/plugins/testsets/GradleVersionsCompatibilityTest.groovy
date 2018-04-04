@@ -45,6 +45,6 @@ class GradleVersionsCompatibilityTest extends Specification {
             result.task(':integrationTest').outcome in [ TaskOutcome.NO_SOURCE, TaskOutcome.UP_TO_DATE ]
 
         where:
-            gradleVersion << [ '4.0', '3.5', '3.3', '3.2.1', '2.14.1' ]
+            gradleVersion << [ '4.6', '4.5.1', '4.0', '3.5', '3.3', '3.2.1', '2.14.1' ]
     }
 }
