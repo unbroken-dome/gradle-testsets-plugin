@@ -15,4 +15,7 @@ interface ConfigurableTestSet extends TestSet {
 
 
     void setDirName(String dirName)
+
+
+    void setEnvironmentVariables(Map<String, Object> environmentVariables)
 }

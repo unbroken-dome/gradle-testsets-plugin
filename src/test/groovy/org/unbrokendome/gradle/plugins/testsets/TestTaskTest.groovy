@@ -58,4 +58,20 @@ class TestTaskTest extends Specification {
             testTask.testClassesDirs[0] == project.sourceSets.myTest.output.classesDirs.singleFile
             testTask.testClassesDirs.files.size() == 1
     }
+
+    def "test set with environment variables specified are on the test task."() {
+        when:
+            project.testSets {
+                myTest {
+                    environmentVariables = ["TESTVAR" : "hello", "ANOTHERVAR" : 123]
+                }
+            }
+
+        then:
+            def testTask = project.tasks['myTest'] as Test
+            testTask.environment.containsKey('TESTVAR')
+            testTask.environment['TESTVAR'] == "hello"
+            testTask.environment.containsKey('ANOTHERVAR')
+            testTask.environment['ANOTHERVAR'] == 123
+    }
 }

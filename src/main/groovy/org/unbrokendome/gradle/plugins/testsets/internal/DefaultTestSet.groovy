@@ -16,6 +16,8 @@ class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
     String classifier
     private final List<Action<TestSet>> extendsFromAddedListeners = new CopyOnWriteArrayList<>()
     private final List<Action<String>> dirNameChangeListeners = new CopyOnWriteArrayList<>()
+    private final List<Action<TestSet>> environmentVariablesAddedListeners = new CopyOnWriteArrayList<>()
+    Map<String, Object> environmentVariables = new HashMap<>()
 
 
     DefaultTestSet(String name) {
@@ -35,6 +37,11 @@ class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
         dirNameChangeListeners.each { it.execute dirName }
     }
 
+    @Override
+    void setEnvironmentVariables(Map<String, Object> environmentVariables) {
+        this.environmentVariables = environmentVariables
+        environmentVariablesAddedListeners.each { it.execute environmentVariables }
+    }
 
     @Override
     ConfigurableTestSet extendsFrom(TestSet... superTestSets) {
@@ -73,4 +80,16 @@ class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
     void whenDirNameChanged(Action<String> action) {
         dirNameChangeListeners << action
     }
+
+    @Override
+    void whenEnvironmentVariablesAdded(Action<TestSet> action) {
+        environmentVariablesAddedListeners << action
+    }
+
+    @Override
+    Map<String, Object> getEnvironmentVariables() {
+        return environmentVariables
+    }
+
+
 }

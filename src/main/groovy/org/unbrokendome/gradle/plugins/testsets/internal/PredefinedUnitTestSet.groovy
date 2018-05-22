@@ -109,6 +109,10 @@ class PredefinedUnitTestSet extends AbstractTestSet {
         }
     }
 
+    @Override
+    Map<String, Object> getEnvironmentVariables() {
+        return Collections.emptyMap()
+    }
 
     @Override
     void whenExtendsFromAdded(Action<TestSet> action) {
@@ -117,5 +121,9 @@ class PredefinedUnitTestSet extends AbstractTestSet {
 
     @Override
     void whenDirNameChanged(Action<String> action) {
+    }
+
+    @Override
+    void whenEnvironmentVariablesAdded(Action<TestSet> action) {
     }
 }
