@@ -59,7 +59,7 @@ class TestTaskTest extends Specification {
             testTask.testClassesDirs.files.size() == 1
     }
 
-    def "test set with environment variables specified are on the test task."() {
+    def "testSet with environment variables specified are on the testSet's test task."() {
         when:
             project.testSets {
                 myTest {
@@ -73,5 +73,21 @@ class TestTaskTest extends Specification {
             testTask.environment['TESTVAR'] == "hello"
             testTask.environment.containsKey('ANOTHERVAR')
             testTask.environment['ANOTHERVAR'] == 123
+    }
+
+    def "testSet with system properties specified are on the testSet's test task."() {
+        when:
+            project.testSets {
+                myTest {
+                    systemProperties = ["sysProp1" : "hello1", "sysProp2" : 123]
+                }
+            }
+
+        then:
+            def testTask = project.tasks["myTest"] as Test
+            testTask.systemProperties.containsKey("sysProp1")
+            testTask.systemProperties["sysProp1"] == "hello1"
+            testTask.systemProperties.containsKey("sysProp2")
+            testTask.systemProperties["sysProp2"] == 123
     }
 }

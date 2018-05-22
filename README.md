@@ -114,9 +114,9 @@ testSets {
 
 This will add the artifact `<projectName>-integrationTest.jar` to the project's artifacts.
 
-### Specifying environment variables for the testSet
+### Specifying environment variables for the testSet test task
 
-Optionally, you can specify the environment variables that will be available during the testSet's test runtime process. To activate this simply set property `environmentVariables` to a Map<String, Object>:
+Optionally, you can specify the environment variables that will be available during the testSet's test task runtime process. To activate this simply set property `environmentVariables` to a Map<String, Object>:
 
 ```groovy
 testSets {
@@ -127,6 +127,20 @@ testSets {
 ```
 
 This will ensure that the specified environment variables are available in the test runtime process.
+
+### Specifying system properties for the testSet test task
+
+Optionally, you can specify the system properties that will be available during the testSet's test task runtime process. To activate this simply set property `systemProperties` to a Map<String, Object>:
+
+```groovy
+testSets {
+    integrationTest {
+        systemProperties = [ "sysProp" : "MYTESTVAR", "sysProp2" : 123 ]
+    }
+}
+```
+
+This will ensure that the specified system properties are available in the test task runtime process.
 
 ## IDE Support
 

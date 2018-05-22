@@ -22,7 +22,8 @@ class TestTaskListener {
 
 
     void testSetAdded(TestSet testSet) {
-        testSet.whenEnvironmentVariablesAdded { environmentVariablesAdded(testSet)}
+        testSet.whenEnvironmentVariablesAdded { environmentVariablesAdded(testSet) }
+        testSet.whenSystemPropertiesAdded { systemPropertiesAdded(testSet) }
 
         def testTask = project.tasks.create(testSet.testTaskName, Test) {
             group = JavaBasePlugin.VERIFICATION_GROUP
@@ -56,6 +57,14 @@ class TestTaskListener {
 
         testSet.getEnvironmentVariables().forEach({ key, value ->
             testTask.environment(key, value)
+        })
+    }
+
+    void systemPropertiesAdded(TestSet testSet) {
+        def testTask = project.tasks[testSet.testTaskName]
+
+        testSet.getSystemProperties().forEach({ key, value ->
+            testTask.systemProperty(key, value)
         })
     }
 

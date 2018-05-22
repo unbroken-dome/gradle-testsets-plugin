@@ -126,4 +126,13 @@ class PredefinedUnitTestSet extends AbstractTestSet {
     @Override
     void whenEnvironmentVariablesAdded(Action<TestSet> action) {
     }
+
+    @Override
+    Map<String, Object> getSystemProperties() {
+        return Collections.emptyMap()
+    }
+
+    @Override
+    void whenSystemPropertiesAdded(Action<TestSet> action) {
+    }
 }
