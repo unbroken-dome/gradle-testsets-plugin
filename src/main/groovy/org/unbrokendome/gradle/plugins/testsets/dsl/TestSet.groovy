@@ -47,9 +47,16 @@ interface TestSet extends Named {
 
     String getArtifactConfigurationName()
 
+    Map<String, Object> getEnvironmentVariables()
+
+    Map<String, Object> getSystemProperties()
 
     void whenExtendsFromAdded(Action<TestSet> action)
 
 
     void whenDirNameChanged(Action<String> action)
+
+    void whenEnvironmentVariablesAdded(Action<TestSet> action)
+
+    void whenSystemPropertiesAdded(Action<TestSet> action)
 }

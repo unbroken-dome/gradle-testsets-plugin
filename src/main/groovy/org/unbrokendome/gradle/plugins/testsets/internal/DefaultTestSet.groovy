@@ -16,6 +16,10 @@ class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
     String classifier
     private final List<Action<TestSet>> extendsFromAddedListeners = new CopyOnWriteArrayList<>()
     private final List<Action<String>> dirNameChangeListeners = new CopyOnWriteArrayList<>()
+    private final List<Action<TestSet>> environmentVariablesAddedListeners = new CopyOnWriteArrayList<>()
+    private final List<Action<TestSet>> systemPropertiesAddedListeners = new CopyOnWriteArrayList<>()
+    Map<String, Object> environmentVariables = new HashMap<>()
+    Map<String, Object> systemProperties = new HashMap<>()
 
 
     DefaultTestSet(String name) {
@@ -35,6 +39,17 @@ class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
         dirNameChangeListeners.each { it.execute dirName }
     }
 
+    @Override
+    void setEnvironmentVariables(Map<String, Object> environmentVariables) {
+        this.environmentVariables = environmentVariables
+        environmentVariablesAddedListeners.each { it.execute environmentVariables }
+    }
+
+    @Override
+    void setSystemProperties(Map<String, Object> systemProperties) {
+        this.systemProperties = systemProperties
+        systemPropertiesAddedListeners.each { it.execute systemProperties }
+    }
 
     @Override
     ConfigurableTestSet extendsFrom(TestSet... superTestSets) {
@@ -72,5 +87,24 @@ class DefaultTestSet extends AbstractTestSet implements ConfigurableTestSet {
     @Override
     void whenDirNameChanged(Action<String> action) {
         dirNameChangeListeners << action
+    }
+
+    @Override
+    void whenEnvironmentVariablesAdded(Action<TestSet> action) {
+        environmentVariablesAddedListeners << action
+    }
+
+    @Override
+    void whenSystemPropertiesAdded(Action<TestSet> action) {
+        systemPropertiesAddedListeners << action
+    }
+
+    @Override
+    Map<String, Object> getEnvironmentVariables() {
+        return environmentVariables
+    }
+
+    Map<String, Object> getSystemProperties() {
+        return systemProperties
     }
 }
