@@ -53,6 +53,7 @@ class SourceSetListener {
 
         applyJavaSrcDir(sourceSet, dirName)
         applyResourcesSrcDir(sourceSet, dirName)
+        applyScalaSrcDir(sourceSet, dirName)
         applyGroovySrcDir(sourceSet, dirName)
         applyKotlinSrcDir(sourceSet, dirName)
     }
@@ -65,6 +66,11 @@ class SourceSetListener {
 
     private void applyJavaSrcDir(SourceSet sourceSet, String dirName) {
         sourceSet.java.srcDirs = [ "src/$dirName/java" ]
+    }
+
+
+    private void applyScalaSrcDir(SourceSet sourceSet, String dirName) {
+        sourceSet.scala.srcDirs = [ "src/$dirName/scala" ]
     }
 
 
