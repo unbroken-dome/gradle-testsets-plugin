@@ -4,6 +4,7 @@ import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.plugins.DslObject
 import org.gradle.api.tasks.GroovySourceSet
+import org.gradle.api.tasks.ScalaSourceSet
 import org.gradle.api.tasks.SourceSet
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetContainer
@@ -70,7 +71,10 @@ class SourceSetListener {
 
 
     private void applyScalaSrcDir(SourceSet sourceSet, String dirName) {
-        sourceSet.scala.srcDirs = [ "src/$dirName/scala" ]
+        def scalaSourceSet = new DslObject(sourceSet).convention.findPlugin ScalaSourceSet
+        if (scalaSourceSet != null) {
+            sourceSet.scala.srcDirs = [ "src/$dirName/scala" ]
+        }
     }
 
 
