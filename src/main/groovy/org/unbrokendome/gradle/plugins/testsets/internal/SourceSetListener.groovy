@@ -4,6 +4,7 @@ import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.plugins.DslObject
 import org.gradle.api.tasks.GroovySourceSet
+import org.gradle.api.tasks.ScalaSourceSet
 import org.gradle.api.tasks.SourceSet
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetContainer
@@ -53,6 +54,7 @@ class SourceSetListener {
 
         applyJavaSrcDir(sourceSet, dirName)
         applyResourcesSrcDir(sourceSet, dirName)
+        applyScalaSrcDir(sourceSet, dirName)
         applyGroovySrcDir(sourceSet, dirName)
         applyKotlinSrcDir(sourceSet, dirName)
     }
@@ -65,6 +67,14 @@ class SourceSetListener {
 
     private void applyJavaSrcDir(SourceSet sourceSet, String dirName) {
         sourceSet.java.srcDirs = [ "src/$dirName/java" ]
+    }
+
+
+    private void applyScalaSrcDir(SourceSet sourceSet, String dirName) {
+        def scalaSourceSet = new DslObject(sourceSet).convention.findPlugin ScalaSourceSet
+        if (scalaSourceSet != null) {
+            sourceSet.scala.srcDirs = [ "src/$dirName/scala" ]
+        }
     }
 
 

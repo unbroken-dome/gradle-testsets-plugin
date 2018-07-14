@@ -113,6 +113,18 @@ class SourceSetTest extends Specification {
     }
 
 
+    def "Source set should use test set's dirName for scala srcDir if given"() {
+        when:
+            project.apply plugin: 'scala'
+            project.testSets {
+                myTest { dirName = 'my-test' }
+            }
+
+        then:
+            project.sourceSets['myTest'].scala.srcDirs == [ project.file('src/my-test/scala') ] as Set
+    }
+
+
     def "Source set should use test set's dirName for groovy srcDir if given"() {
         when:
             project.apply plugin: 'groovy'
