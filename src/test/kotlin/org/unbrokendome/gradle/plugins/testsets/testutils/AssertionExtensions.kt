@@ -93,3 +93,11 @@ fun <T> Assert<Iterable<T>>.hasSingleItem(block: (Assert<T>) -> Unit = {}) {
     }
     assert(item, name = "[0]").all(block)
 }
+
+
+fun <T> Assert<Iterable<T>>.containsAll(items: Iterable<T>) {
+    val notContained = items.minus(actual)
+    if (notContained.isNotEmpty()) {
+        return expected("to contain all of ${show(items)}\n  but did not contain ${show(notContained)}", actual = actual)
+    }
+}
