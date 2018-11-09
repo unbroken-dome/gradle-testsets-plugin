@@ -36,6 +36,12 @@ abstract class AbstractTestSet implements TestSet {
 
 
     @Override
+    String getCompileClasspathConfigurationName() {
+        "${name}CompileClasspath"
+    }
+
+
+    @Override
     String getAnnotationProcessorConfigurationName() {
         "${name}AnnotationProcessor"
     }
@@ -55,6 +61,12 @@ abstract class AbstractTestSet implements TestSet {
     @Override
     String getRuntimeOnlyConfigurationName() {
         "${name}RuntimeOnly"
+    }
+
+
+    @Override
+    String getRuntimeClasspathConfigurationName() {
+        "${name}RuntimeClasspath"
     }
 
 

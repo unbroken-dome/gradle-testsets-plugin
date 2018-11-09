@@ -62,8 +62,9 @@ public class IdeaModuleListener {
                 }
             }
 
-            addConfigurationToClasspath testSet.compileConfigurationName, ideaModule
-            addConfigurationToClasspath testSet.runtimeConfigurationName, ideaModule
+            addConfigurationToClasspath testSet.compileClasspathConfigurationName, ideaModule
+            addConfigurationToClasspath testSet.runtimeClasspathConfigurationName, ideaModule
+            addConfigurationToClasspath testSet.annotationProcessorConfigurationName, ideaModule
 
             applyLibraryFix ideaModule
         }

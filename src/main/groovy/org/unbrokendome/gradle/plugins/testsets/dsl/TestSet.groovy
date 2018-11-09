@@ -33,6 +33,9 @@ interface TestSet extends Named {
     String getCompileOnlyConfigurationName()
 
 
+    String getCompileClasspathConfigurationName()
+
+
     String getAnnotationProcessorConfigurationName()
 
 
@@ -43,6 +46,9 @@ interface TestSet extends Named {
 
 
     String getRuntimeOnlyConfigurationName()
+
+
+    String getRuntimeClasspathConfigurationName()
 
 
     String getArtifactConfigurationName()
