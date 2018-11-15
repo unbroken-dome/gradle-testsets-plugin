@@ -12,6 +12,7 @@ import org.gradle.plugins.ide.eclipse.EclipsePlugin
 import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.EclipseModel
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
+import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestLibrary
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetBase
@@ -19,6 +20,7 @@ import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetBaseInternal
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetContainer
 import org.unbrokendome.gradle.plugins.testsets.dsl.testSetContainer
 import org.unbrokendome.gradle.plugins.testsets.internal.ConfigurationObserver
+import org.unbrokendome.gradle.plugins.testsets.internal.IdeaModuleObserver
 import org.unbrokendome.gradle.plugins.testsets.internal.SourceSetObserver
 import org.unbrokendome.gradle.plugins.testsets.util.extension
 import org.unbrokendome.gradle.plugins.testsets.util.get
@@ -59,6 +61,12 @@ class TestSetsPlugin
                 project.modifyEclipseClasspath(testSet)
             }
         }
+
+        project.plugins.withType(IdeaPlugin::class.java) {
+            testSets.all { testSet ->
+                project.modifyIdeaModule(testSet)
+            }
+        }
     }
 
 
@@ -88,7 +96,6 @@ class TestSetsPlugin
 
             }
         }
-
     }
 
 
@@ -157,5 +164,12 @@ class TestSetsPlugin
                         .forEach { it.entryAttributes["test"] = true }
             }
         }
+    }
+
+
+    private fun Project.modifyIdeaModule(testSet: TestSetBase) {
+        // the initial setup logic is contained in the IdeaModuleObserver class too
+        val observer = IdeaModuleObserver(this, testSet)
+        (testSet as? TestSetBaseInternal)?.addObserver(observer)
     }
 }
