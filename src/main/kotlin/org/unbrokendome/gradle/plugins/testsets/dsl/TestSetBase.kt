@@ -1,8 +1,6 @@
 package org.unbrokendome.gradle.plugins.testsets.dsl
 
 import org.gradle.api.Named
-import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.internal.HasConvention
 import org.gradle.api.tasks.SourceSet
 import org.unbrokendome.gradle.plugins.testsets.util.observableSetOf
 
@@ -193,27 +191,6 @@ internal abstract class AbstractTestSetBase(
                 notifyObservers { it.dirNameChanged(this, oldValue, value) }
             }
         }
-
-
-    private fun applyDirNameToSourceSet() {
-        with(sourceSet) {
-            java.setSrcDirs(listOf("src/$dirName/java"))
-            resources.setSrcDirs(listOf("src/$dirName/resources"))
-
-            (this as? HasConvention)?.convention?.plugins
-                    ?.forEach { conventionName, convention ->
-                        convention.javaClass.methods
-                                .find {
-                                    it.name == "get${conventionName.capitalize()}" &&
-                                            SourceDirectorySet::class.java.isAssignableFrom(it.returnType) &&
-                                            it.parameterCount == 0
-                                }
-                                ?.let { method ->
-                                    method.invoke(convention) as SourceDirectorySet
-                                }?.setSrcDirs(listOf("src/$dirName/$conventionName"))
-                    }
-        }
-    }
 
 
     override var extendsFrom: MutableSet<TestSetBase> = observableSetOf(

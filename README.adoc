@@ -442,22 +442,3 @@ see even classes from runtime-only dependencies in code completion.
 If you're using the test-sets plugin in IDEA, make sure to check the option "Create separate module per source set"
 when importing the Gradle project, or afterwards in your Gradle settings. This will allow IDEA to manage the
 dependencies independently for each source set.
-
-[NOTE]
-====
-As of version 2.0, the plugin does not contain any IDEA-related code anymore.
-
-In earlier (pre-2016) versions of IDEA, it was possible for Gradle projects to influence the import process using
-Gradle's https://docs.gradle.org/current/dsl/org.gradle.plugins.ide.idea.model.IdeaModel.html[`IdeaModel`].
-
-However, in more recent versions of IDEA this mechanism does not seem to be used anymore; IDEA's Gradle import
-completely bypasses the `IdeaModel`. As a result, there is no way whatsoever for Gradle plugins to influence the
-structure of the imported project.
-====
-
-The plugin should work mostly as expected, except that modules for test sets are not marked as test code
-(the folder icon in the project view will be blue, like for "main", instead of green). If you know any way how to
-accomplish this from a Gradle plugin, please let me know!
-
-Having the test set marked as "production" code instead of "test" code will not stop you from working, but it might
-lead to some confusion in search results, as well as false positives in code quality inspections.
