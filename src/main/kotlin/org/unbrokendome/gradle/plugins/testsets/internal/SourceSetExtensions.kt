@@ -18,13 +18,13 @@ internal fun SourceSet.getAllSourceDirectorySets(): Sequence<SourceDirectorySet>
 
 /**
  * Gets all [SourceDirectorySet]s for this [SourceSet] that contain code. This includes the
- * [allJava][SourceSet.getAllJava] directory set as well as any `SourceDirectorySet`s added by plugin conventions
+ * [java][SourceSet.getJava] directory set as well as any `SourceDirectorySet`s added by plugin conventions
  * (e.g. `groovy`, `kotlin`) but not the `resources`.
  *
  * @return a [Sequence] containing all code [SourceDirectorySet]s
  */
 internal fun SourceSet.getAllCodeSourceDirectorySets(): Sequence<SourceDirectorySet> =
-        sequenceOf(allJava) + getAdditionalSourceDirectorySets()
+        sequenceOf(java) + getAdditionalSourceDirectorySets()
 
 
 /**
