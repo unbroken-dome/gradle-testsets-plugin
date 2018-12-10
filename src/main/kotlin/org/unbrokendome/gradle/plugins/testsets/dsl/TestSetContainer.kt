@@ -3,10 +3,9 @@ package org.unbrokendome.gradle.plugins.testsets.dsl
 import groovy.lang.Closure
 import groovy.lang.DelegatesTo
 import org.gradle.api.Action
-import org.gradle.api.Named
 import org.gradle.api.PolymorphicDomainObjectContainer
 import org.gradle.api.Project
-import org.gradle.api.internal.AbstractPolymorphicDomainObjectContainer
+import org.gradle.api.internal.DefaultPolymorphicDomainObjectContainer
 import org.gradle.api.tasks.SourceSet
 import org.gradle.internal.reflect.Instantiator
 import org.gradle.model.internal.core.NamedEntityInstantiator
@@ -65,10 +64,10 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
 
 private open class DefaultTestSetContainer
 @Inject constructor(project: Project, instantiator: Instantiator)
-    : AbstractPolymorphicDomainObjectContainer<TestSetBase>(
+    // Use this constructor, as they are still supporting it because 'nebula.lint' uses it
+    : DefaultPolymorphicDomainObjectContainer<TestSetBase>(
         TestSetBase::class.java,
-        instantiator,
-        Named.Namer.INSTANCE),
+        instantiator),
         TestSetContainer {
 
     private companion object {
