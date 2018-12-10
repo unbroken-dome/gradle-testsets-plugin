@@ -63,8 +63,8 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
 
 
 private open class DefaultTestSetContainer
-@Inject constructor(project: Project, instantiator: Instantiator)
-    // Use this constructor, as they are still supporting it because 'nebula.lint' uses it
+@Inject constructor(private val project: Project, instantiator: Instantiator)
+// Use this constructor, as they are still supporting it because 'nebula.lint' uses it
     : DefaultPolymorphicDomainObjectContainer<TestSetBase>(
         TestSetBase::class.java,
         instantiator),
@@ -91,7 +91,7 @@ private open class DefaultTestSetContainer
     private val entityInstantiator = object : NamedEntityInstantiator<TestSetBase> {
         @Suppress("UNCHECKED_CAST")
         override fun <S : TestSetBase> create(name: String, type: Class<S>): S {
-            val sourceSet = project.sourceSets.create(NamingConventions.sourceSetName(name))
+            val sourceSet = createSourceSetForTestSet(name)
             return when (type) {
                 TestSet::class.java ->
                     project.objects.newTestSet(name, sourceSet)
@@ -103,6 +103,29 @@ private open class DefaultTestSetContainer
             } as S
         }
     }
+
+
+    /**
+     * Creates a new [SourceSet] for a test set.
+     *
+     * This sets up the new source set's compile classpath and runtime classpath, analogously to what the
+     * JavaPlugin does with the `test` sourceSet. The reference to the `main` output is not modeled as a dependency
+     * but is set directly on the source set's classpath. That's why we won't inherit this by extending from the
+     * `unitTest` set, so we have to configure it for each new test set.
+     *
+     * @param name the name of the new test set
+     */
+    private fun createSourceSetForTestSet(name: String): SourceSet =
+            project.sourceSets.create(NamingConventions.sourceSetName(name))
+                    .also { sourceSet ->
+                        sourceSet.compileClasspath = project.layout.configurableFiles(
+                                project.sourceSets["main"].output,
+                                project.configurations[sourceSet.compileClasspathConfigurationName])
+                        sourceSet.runtimeClasspath = project.layout.configurableFiles(
+                                sourceSet.output,
+                                project.sourceSets["main"].output,
+                                project.configurations[sourceSet.runtimeClasspathConfigurationName])
+                    }
 
 
     override fun doCreate(name: String): TestSet =
