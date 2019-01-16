@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test
 import org.unbrokendome.gradle.plugins.testsets.dsl.testSets
 import org.unbrokendome.gradle.plugins.testsets.testutils.containsAll
 import org.unbrokendome.gradle.plugins.testsets.testutils.containsItem
+import org.unbrokendome.gradle.plugins.testsets.testutils.startsWith
 import org.unbrokendome.gradle.plugins.testsets.util.get
 import org.unbrokendome.gradle.plugins.testsets.util.sourceSets
 import org.gradle.api.tasks.testing.Test as TestTask
@@ -36,8 +37,8 @@ class TestTaskTest {
                         it.prop("testClassesDirs", TestTask::getTestClassesDirs)
                                 .isEqualTo(testSet.sourceSet.output.classesDirs)
                         it.prop("classpath", TestTask::getClasspath).all {
-                            containsAll(testSet.sourceSet.runtimeClasspath)
-                            containsAll(project.sourceSets["main"].output)
+                            startsWith(testSet.sourceSet.runtimeClasspath)
+                            containsAll(project.sourceSets["test"].output)
                         }
                     }
                 }
