@@ -141,7 +141,7 @@ class TestSetsPlugin
 
             testSet.sourceSet.let { sourceSet ->
                 task.testClassesDirs = sourceSet.output.classesDirs
-                task.classpath += sourceSet.runtimeClasspath
+                task.classpath = sourceSet.runtimeClasspath + task.classpath
             }
         }
     }

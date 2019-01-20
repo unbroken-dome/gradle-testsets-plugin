@@ -95,6 +95,18 @@ fun <T> Assert<Iterable<T>>.hasSingleItem(block: (Assert<T>) -> Unit = {}) {
 }
 
 
+fun <T> Assert<Iterable<T>>.startsWith(items: Iterable<T>) {
+    val itemsIter = items.iterator()
+    val actualIter = actual.iterator()
+    while (itemsIter.hasNext()) {
+        val item = itemsIter.next()
+        if (!actualIter.hasNext() || actualIter.next() != item) {
+            return expected("to start with ${show(items)}\n but did not contain ${show(item)}", actual = actual)
+        }
+    }
+}
+
+
 fun <T> Assert<Iterable<T>>.containsAll(items: Iterable<T>) {
     val notContained = items.minus(actual)
     if (notContained.isNotEmpty()) {
