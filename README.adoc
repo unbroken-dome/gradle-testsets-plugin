@@ -266,12 +266,18 @@ helpers that you would like to use from both unit and integration tests, you cou
 
 [source,groovy]
 ----
-import org.unbrokendome.gradle.plugins.testsets.dsl.TestLibrary
 
 testSets {
-    testCommon(TestLibrary)
-    unitTest { imports testCommon }
-    integrationTest { imports testCommon }
+    libraries { testCommon }
+
+    unitTest {
+        imports libraries.testCommon
+    }
+
+    integrationTest {
+        // You can also import libraries by name
+        imports 'testCommon'
+    }
 }
 
 dependencies {
@@ -298,20 +304,6 @@ Note that we use `imports` instead of `extendsFrom` to use a library, which has 
 * `integrationTestRuntimeOnly` will extend from `testCommonRuntimeClasspath`
 
 Unlike `extendsFrom`, importing a test library will not inherit any compile-only or annotation processor dependencies.
-
-
-[TIP]
-====
-If you do not like the extra `import` statement for `TestLibrary`, you can also use the `createLibrary` method
-to create a library:
-
-[source,groovy]
-----
-testSets {
-    createLibrary('testCommon')
-}
-----
-====
 
 
 === Publishing an artifact
@@ -360,8 +352,6 @@ To create a test set, use any of the common idioms from the Kotlin DSL:
 
 [source,kotlin]
 ----
-import org.unbrokendome.gradle.plugins.testsets.dsl.TestLibrary
-
 plugins {
     id("org.unbroken-dome.test-sets") version "2.0.3"
 }
@@ -374,12 +364,22 @@ testSets {
     // or the create() method
     create("barTest") { ... }
 
-    // use TestLibrary::class as an argument to create a library
-    val myTestLib by creating(TestLibrary::class)
+    // use the libraries "container view" to create a library
+    val myTestLib by libraries.creating
 
-    // unitTest is already defined, so we need to use getting
+    // or declare it inside a libraries block
+    libraries {
+        create("myOtherTestLib")
+    }
+
+    // unitTest is already defined, so we need to use getting instead of creating
     val unitTest by getting {
+
         imports(myTestLib)
+
+        // in contrast to Groovy, myOtherTestLib won't be available as a dynamic property,
+        // so we need to import it by name
+        imports("myOtherTestLib")
     }
 }
 ----
@@ -396,7 +396,7 @@ plugins {
 }
 
 testSets {
-    val myTestLib = "myTestLib"(TestLibrary::class)
+    val myTestLib by libraries.creating
 
     "fooTest"()
 

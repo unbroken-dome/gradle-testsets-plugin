@@ -3,6 +3,7 @@ package org.unbrokendome.gradle.plugins.testsets.dsl
 import groovy.lang.Closure
 import groovy.lang.DelegatesTo
 import org.gradle.api.Action
+import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.PolymorphicDomainObjectContainer
 import org.gradle.api.Project
 import org.gradle.api.internal.DefaultPolymorphicDomainObjectContainer
@@ -41,6 +42,16 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
                       @DelegatesTo(TestLibrary::class, strategy = Closure.DELEGATE_FIRST)
                       configureClosure: Closure<*>): TestLibrary =
             createLibrary(name, configureClosure.toAction())
+
+
+    @JvmDefault
+    val libraries: NamedDomainObjectContainer<TestLibrary>
+        get() = containerWithType(TestLibrary::class.java)
+
+
+    @JvmDefault
+    fun libraries(action: Action<NamedDomainObjectContainer<TestLibrary>>) =
+            action.execute(libraries)
 
 
     operator fun String.invoke(configureAction: TestSet.() -> Unit = {}): TestSet =
