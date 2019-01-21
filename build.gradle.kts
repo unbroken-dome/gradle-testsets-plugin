@@ -17,8 +17,8 @@ val integrationTest by sourceSets.creating
 
 
 configurations {
-    "integrationTestImplementation" { extendsFrom(configurations.testImplementation) }
-    "integrationTestRuntimeOnly" { extendsFrom(configurations.testRuntimeOnly) }
+    "integrationTestImplementation" { extendsFrom(configurations["testImplementation"]) }
+    "integrationTestRuntimeOnly" { extendsFrom(configurations["testRuntimeOnly"]) }
 }
 
 
