@@ -4,8 +4,8 @@ import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
 
 
-internal class PredefinedUnitTestSet(sourceSet: SourceSet)
-    : AbstractTestSetBase("unitTest", sourceSet), TestSet {
+internal class PredefinedUnitTestSet(container: TestSetContainer, sourceSet: SourceSet)
+    : AbstractTestSetBase(container, "unitTest", sourceSet), TestSet {
 
     override val testTaskName: String
         get() = JavaPlugin.TEST_TASK_NAME

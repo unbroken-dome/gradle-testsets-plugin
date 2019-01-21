@@ -29,11 +29,10 @@ interface TestSetBase : Named {
     /**
      * Adds the given test sets or libraries to the set of extended test sets.
      *
-     * @param testSets the other test sets or libraries to extend from
+     * @param testSetsToExtend the other test sets or libraries to extend from, either as
+     *        [TestSet] or [TestLibrary] objects or their names
      */
-    @JvmDefault
-    fun extendsFrom(vararg testSets: TestSetBase) =
-            extendsFrom.addAll(testSets)
+    fun extendsFrom(vararg testSetsToExtend: Any)
 
     /**
      * A set of test libraries that this test set depends on.
@@ -43,11 +42,9 @@ interface TestSetBase : Named {
     /**
      * Adds the given libraries to the set of imported libraries for this test set.
      *
-     * @param libraries the libraries to import
+     * @param librariesToImport the libraries to import, either as [TestLibrary] objects or names
      */
-    @JvmDefault
-    fun imports(vararg libraries: TestLibrary) =
-            imports.addAll(libraries)
+    fun imports(vararg librariesToImport: Any)
 
     /**
      * The name of the source set containing the sources for this test set.
@@ -172,6 +169,7 @@ internal interface TestSetBaseInternal : TestSetBase {
 
 
 internal abstract class AbstractTestSetBase(
+        private val container: TestSetContainer,
         private val name: String,
         override val sourceSet: SourceSet)
     : TestSetBase, TestSetBaseInternal {
@@ -202,6 +200,20 @@ internal abstract class AbstractTestSetBase(
         }
 
 
+    override fun extendsFrom(vararg testSetsToExtend: Any) {
+        testSetsToExtend.asSequence()
+                .map {
+                    when (it) {
+                        is TestSetBase -> it
+                        is CharSequence -> container.getByName(it.toString())
+                        else -> throw IllegalArgumentException("Arguments to extendsFrom must be either TestSet or " +
+                                "TestLibrary objects or strings")
+                    }
+                }
+                .toCollection(extendsFrom)
+    }
+
+
     override var imports: MutableSet<TestLibrary> = observableSetOf(
             elementAdded = { element -> notifyObservers { it.importAdded(this, element) }},
             elementRemoved = { element -> notifyObservers { it.importRemoved(this, element) }})
@@ -209,6 +221,22 @@ internal abstract class AbstractTestSetBase(
             field.clear()
             field.addAll(value)
         }
+
+
+    override fun imports(vararg librariesToImport: Any) {
+        librariesToImport.asSequence()
+                .map {
+                    when (it) {
+                        is TestLibrary -> it
+                        is CharSequence -> container.getByName(it.toString()) as? TestLibrary
+                            ?: throw IllegalArgumentException("Only test libraries can be imported, but \"$it\" is " +
+                                    "a test set. Use extendsFrom instead to extend from a test set.")
+                        else -> throw IllegalArgumentException("Arguments to imports must be either " +
+                                "TestLibrary objects or strings")
+                    }
+                }
+                .toCollection(imports)
+    }
 
 
     override var createArtifact: Boolean = false
