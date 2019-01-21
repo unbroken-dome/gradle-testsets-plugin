@@ -13,9 +13,9 @@ interface TestSet : TestSetBase {
 
 
 private open class DefaultTestSet
-@Inject constructor(name: String, sourceSet: SourceSet)
-    : AbstractTestSetBase(name, sourceSet), TestSet
+@Inject constructor(container: TestSetContainer, name: String, sourceSet: SourceSet)
+    : AbstractTestSetBase(container, name, sourceSet), TestSet
 
 
-internal fun ObjectFactory.newTestSet(name: String, sourceSet: SourceSet): TestSet =
-        newInstance(DefaultTestSet::class.java, name, sourceSet)
+internal fun ObjectFactory.newTestSet(container: TestSetContainer, name: String, sourceSet: SourceSet): TestSet =
+        newInstance(DefaultTestSet::class.java, container, name, sourceSet)

@@ -49,16 +49,6 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
 
     operator fun <T : TestSetBase> String.invoke(type: KClass<T>, configureAction: T.() -> Unit = {}): T =
             maybeCreate(this, type.java).also(configureAction)
-
-
-    fun TestSetBase.imports(vararg libraryNames: String) {
-        imports(*names.map { getByName(it) as TestLibrary }.toTypedArray())
-    }
-
-
-    fun TestSetBase.extendsFrom(vararg testSetNames: String) {
-        extendsFrom(*names.map { getByName(it) }.toTypedArray())
-    }
 }
 
 
@@ -76,7 +66,9 @@ private open class DefaultTestSetContainer
     }
 
 
-    private val unitTestSet = PredefinedUnitTestSet(project.sourceSets[SourceSet.TEST_SOURCE_SET_NAME])
+    @Suppress("LeakingThis")
+    private val unitTestSet = PredefinedUnitTestSet(this,
+            project.sourceSets[SourceSet.TEST_SOURCE_SET_NAME])
             .also { add(it) }
 
 
@@ -94,10 +86,10 @@ private open class DefaultTestSetContainer
             val sourceSet = createSourceSetForTestSet(name)
             return when (type) {
                 TestSet::class.java ->
-                    project.objects.newTestSet(name, sourceSet)
+                    project.objects.newTestSet(this@DefaultTestSetContainer, name, sourceSet)
                             .apply { extendsFrom(unitTestSet) }
                 TestLibrary::class.java ->
-                    project.objects.newTestLibrary(name, sourceSet)
+                    project.objects.newTestLibrary(this@DefaultTestSetContainer, name, sourceSet)
                 else ->
                     throw IllegalArgumentException("Cannot instantiate $type")
             } as S

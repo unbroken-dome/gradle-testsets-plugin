@@ -16,9 +16,9 @@ interface TestLibrary : TestSetBase {
 
 
 private open class DefaultTestLibrary
-@Inject constructor(name: String, sourceSet: SourceSet)
-    : AbstractTestSetBase(name, sourceSet), TestLibrary
+@Inject constructor(container: TestSetContainer, name: String, sourceSet: SourceSet)
+    : AbstractTestSetBase(container, name, sourceSet), TestLibrary
 
 
-internal fun ObjectFactory.newTestLibrary(name: String, sourceSet: SourceSet): TestLibrary =
-        newInstance(DefaultTestLibrary::class.java, name, sourceSet)
+internal fun ObjectFactory.newTestLibrary(container: TestSetContainer, name: String, sourceSet: SourceSet): TestLibrary =
+        newInstance(DefaultTestLibrary::class.java, container, name, sourceSet)
