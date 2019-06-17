@@ -2,6 +2,7 @@ package org.unbrokendome.gradle.plugins.testsets.dsl
 
 import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.tasks.SourceSet
+import org.gradle.testing.jacoco.plugins.JacocoPlugin
 
 
 internal class PredefinedUnitTestSet(container: TestSetContainer, sourceSet: SourceSet)

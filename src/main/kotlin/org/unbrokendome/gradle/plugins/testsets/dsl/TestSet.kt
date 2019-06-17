@@ -9,6 +9,15 @@ interface TestSet : TestSetBase {
 
     val testTaskName: String
         get() = NamingConventions.testTaskName(name)
+
+    /**
+     * The name of the [JacocoReport][org.gradle.testing.jacoco.tasks.JacocoReport] task creating the JaCoCo reports
+     * for this test set.
+     *
+     * Only relevant if the `jacoco` Gradle plugin is also applied to the project.
+     */
+    val jacocoReportTaskName: String
+        get() = NamingConventions.jacocoReportTaskName(testTaskName)
 }
 
 

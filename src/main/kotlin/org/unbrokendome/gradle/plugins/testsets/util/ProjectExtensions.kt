@@ -42,5 +42,3 @@ internal fun <T : Any, U : T> PolymorphicDomainObjectContainer<T>.registerOrConf
             }
         }
     }
-
-
