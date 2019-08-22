@@ -22,22 +22,14 @@ inline fun <reified E : Any> Assert<*>.hasExtension(name: String? = null, noinli
         val extension: E = if (name != null) {
             extensions.findByName(name)
                 .let {
-                    if (it == null) {
-                        expected("to have an extension named \"$name\" of type ${show(E::class)}")
+                    when (it) {
+                        null -> expected("to have an extension named \"$name\" of type ${show(E::class)}")
+                        !is E -> expected("to have an extension named \"$name\" of type ${show(E::class)}, but actual type was: ${show(it.javaClass)}")
+                        else -> it
                     }
-                    if (it !is E) {
-                        expected("to have an extension named \"$name\" of type ${show(E::class)}, but actual type was: ${show(it.javaClass)}")
-                    }
-                    it
-                } as E
+                }
         } else {
-            extensions.findByType(E::class.java)
-                .let {
-                    if (it == null) {
-                        expected("to have an extension of type ${show(E::class)}")
-                    }
-                    it
-                } as E
+            extensions.findByType(E::class.java) ?: expected("to have an extension of type ${show(E::class)}")
         }
 
         assertThat(extension, name = "extension " + (name?.let { "\"$it\"" } ?: show(E::class))).all(block)
