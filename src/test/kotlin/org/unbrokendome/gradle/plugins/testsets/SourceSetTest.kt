@@ -1,7 +1,7 @@
 package org.unbrokendome.gradle.plugins.testsets
 
 import assertk.all
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.hasSize
 import assertk.assertions.prop
@@ -32,7 +32,7 @@ class SourceSetTest {
     fun `Should create a new source set for a test set`() {
         project.testSets.create("foo")
 
-        assert(project.sourceSets, "sourceSets")
+        assertThat(project.sourceSets, "sourceSets")
                 .containsItem("foo")
     }
 
@@ -43,7 +43,7 @@ class SourceSetTest {
             it.dirName = "bar"
         }
 
-        assert(project.sourceSets, "sourceSets")
+        assertThat(project.sourceSets, "sourceSets")
                 .containsItem("foo") {
                     it.prop("java", SourceSet::getJava)
                             .prop("srcDirs", SourceDirectorySet::getSrcDirs)
@@ -69,7 +69,7 @@ class SourceSetTest {
             it.dirName = "bar"
         }
 
-        assert(project.sourceSets, "sourceSets")
+        assertThat(project.sourceSets, "sourceSets")
                 .containsItem("foo") {
                     it.hasConvention<GroovySourceSet> {
                         it.prop("groovy", GroovySourceSet::getGroovy)
@@ -91,7 +91,7 @@ class SourceSetTest {
             it.dirName = "bar"
         }
 
-        assert(project.sourceSets, "sourceSets")
+        assertThat(project.sourceSets, "sourceSets")
                 .containsItem("foo") {
                     it.hasConvention<KotlinSourceSet> {
                         it.prop("kotlin") { it.kotlin }

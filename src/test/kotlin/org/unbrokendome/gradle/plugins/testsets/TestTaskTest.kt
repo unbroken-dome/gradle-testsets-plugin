@@ -1,6 +1,6 @@
 package org.unbrokendome.gradle.plugins.testsets
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.prop
@@ -25,9 +25,9 @@ class TestTaskTest {
     fun `Should create a Test task for each test set`() {
         val testSet = project.testSets.create("fooTest")
 
-        assert(project.tasks, "tasks")
+        assertThat(project.tasks, "tasks")
                 .containsItem("fooTest") {
-                    it.isInstanceOf(TestTask::class) {
+                    it.isInstanceOf(TestTask::class).let {
                         it.prop("testClassesDirs", TestTask::getTestClassesDirs)
                                 .isEqualTo(testSet.sourceSet.output.classesDirs)
                         it.prop("classpath", TestTask::getClasspath)

@@ -1,6 +1,6 @@
 package org.unbrokendome.gradle.plugins.testsets
 
-import assertk.assert
+import assertk.assertThat
 import org.gradle.api.Project
 import org.gradle.api.artifacts.FileCollectionDependency
 import org.gradle.testfixtures.ProjectBuilder
@@ -37,7 +37,7 @@ class TestSetConfigurationsTest {
 
         val (configurationName, superConfigurationName) = configs.split(" <- ")
 
-        assert(project.configurations, "configurations")
+        assertThat(project.configurations, "configurations")
                 .containsItem(configurationName) {
                     it.extendsFrom(superConfigurationName)
                 }
@@ -59,7 +59,7 @@ class TestSetConfigurationsTest {
 
         val (configurationName, superConfigurationName) = configs.split(" <- ")
 
-        assert(project.configurations, "configurations")
+        assertThat(project.configurations, "configurations")
                 .containsItem(configurationName) {
                     it.extendsFrom(superConfigurationName)
                 }
@@ -78,7 +78,7 @@ class TestSetConfigurationsTest {
 
         @Test
         fun `Implementation should depend on API dependencies from imported library`() {
-            assert(project.configurations, "configurations")
+            assertThat(project.configurations, "configurations")
                     .containsItem("fooImplementation") {
                         it.extendsFrom("barApi")
                     }
@@ -87,7 +87,7 @@ class TestSetConfigurationsTest {
 
         @Test
         fun `Implementation should depend on classes from imported library`() {
-            assert(project.configurations, "configurations")
+            assertThat(project.configurations, "configurations")
                     .containsItem("fooImplementation") {
                         it.containsDependency<FileCollectionDependency>("bar's output") {
                             it.files == barLibrary.sourceSet.output

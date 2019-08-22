@@ -1,6 +1,6 @@
 package org.unbrokendome.gradle.plugins.testsets
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isIn
 import assertk.assertions.isNotNull
 import assertk.assertions.prop
@@ -44,12 +44,12 @@ class GradleVersionsCompatibilityTest {
                 .forwardOutput()
                 .build()
 
-        assert(result, "result")
-                .prop("for task integrationTest") { it.task(":integrationTest") }
-                .isNotNull {
-                    it.prop("outcome", BuildTask::getOutcome)
-                            .isIn(TaskOutcome.NO_SOURCE, TaskOutcome.UP_TO_DATE)
-                }
+        assertThat(result, "result")
+            .prop("for task integrationTest") { it.task(":integrationTest") }
+            .isNotNull().let {
+                it.prop("outcome", BuildTask::getOutcome)
+                    .isIn(TaskOutcome.NO_SOURCE, TaskOutcome.UP_TO_DATE)
+            }
     }
 
 

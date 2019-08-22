@@ -1,6 +1,6 @@
 package org.unbrokendome.gradle.plugins.testsets
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isInstanceOf
 import org.gradle.api.Project
 import org.gradle.testfixtures.ProjectBuilder
@@ -22,13 +22,13 @@ class TestSetsPluginTest {
 
     @Test
     fun `should create a testSets extension`() {
-        assert(project).hasExtension<TestSetContainer>("testSets")
+        assertThat(project).hasExtension<TestSetContainer>("testSets")
     }
 
 
     @Test
     fun `should have a predefined "unitTest" test set`() {
-        assert(project.testSets, "testSets")
+        assertThat(project.testSets, "testSets")
                 .containsItem("unitTest") {
                     it.isInstanceOf(TestSet::class)
                 }

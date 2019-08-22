@@ -1,6 +1,6 @@
 package org.unbrokendome.gradle.plugins.testsets
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isInstanceOf
 import assertk.assertions.prop
@@ -32,12 +32,11 @@ class ArtifactTest {
             it.classifier = "foo-classifier"
         }
 
-        assert(project.tasks, "tasks")
+        assertThat(project.tasks, "tasks")
                 .containsItem("fooJar") {
-                    it.isInstanceOf(Jar::class.java) {
-                        it.prop("classifier", Jar::getClassifier)
-                                .isEqualTo("foo-classifier")
-                    }
+                    it.isInstanceOf(Jar::class.java)
+                        .prop("classifier", Jar::getClassifier)
+                        .isEqualTo("foo-classifier")
                 }
     }
 
@@ -51,7 +50,7 @@ class ArtifactTest {
 
         project.evaluate()
 
-        assert(project.configurations, "configurations")
+        assertThat(project.configurations, "configurations")
                 .containsItem("foo") {
                     it.prop("allArtifacts", Configuration::getAllArtifacts)
                             .hasSingleItem {

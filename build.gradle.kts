@@ -33,7 +33,7 @@ dependencies {
     testImplementation(kotlin("stdlib-jdk8"))
     testImplementation(kotlin("reflect"))
     testImplementation(kotlin("gradle-plugin"))
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.12")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.19")
 
     "integrationTestImplementation"(gradleApi())
 }
