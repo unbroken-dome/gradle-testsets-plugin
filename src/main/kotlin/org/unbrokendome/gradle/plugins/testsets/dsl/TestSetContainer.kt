@@ -6,6 +6,7 @@ import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.PolymorphicDomainObjectContainer
 import org.gradle.api.Project
+import org.gradle.api.internal.CollectionCallbackActionDecorator
 import org.gradle.api.internal.DefaultPolymorphicDomainObjectContainer
 import org.gradle.api.tasks.SourceSet
 import org.gradle.internal.reflect.Instantiator
@@ -65,10 +66,9 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
 
 private open class DefaultTestSetContainer
 @Inject constructor(private val project: Project, instantiator: Instantiator)
-// Use this constructor, as they are still supporting it because 'nebula.lint' uses it
     : DefaultPolymorphicDomainObjectContainer<TestSetBase>(
         TestSetBase::class.java,
-        instantiator),
+        instantiator, CollectionCallbackActionDecorator.NOOP),
         TestSetContainer {
 
     private companion object {
@@ -121,10 +121,10 @@ private open class DefaultTestSetContainer
     private fun createSourceSetForTestSet(name: String): SourceSet =
             project.sourceSets.create(NamingConventions.sourceSetName(name))
                     .also { sourceSet ->
-                        sourceSet.compileClasspath = project.layout.configurableFiles(
+                        sourceSet.compileClasspath = project.files(
                                 project.sourceSets["main"].output,
                                 project.configurations[sourceSet.compileClasspathConfigurationName])
-                        sourceSet.runtimeClasspath = project.layout.configurableFiles(
+                        sourceSet.runtimeClasspath = project.files(
                                 sourceSet.output,
                                 project.sourceSets["main"].output,
                                 project.configurations[sourceSet.runtimeClasspathConfigurationName])
