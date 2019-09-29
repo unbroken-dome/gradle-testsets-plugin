@@ -1,6 +1,6 @@
 package org.unbrokendome.gradle.plugins.testsets
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isIn
 import assertk.assertions.isNotNull
 import assertk.assertions.prop
@@ -22,13 +22,15 @@ class GradleVersionsCompatibilityTest {
     @BeforeEach
     fun setup() {
         projectDir.resolve("build.gradle.kts")
-                .writeText("""
+            .writeText(
+                """
                     plugins {
                        id("org.unbroken-dome.test-sets")
                     }
 
                     testSets.create("integrationTest")
-                    """.trimIndent())
+                    """.trimIndent()
+            )
     }
 
 
@@ -37,19 +39,18 @@ class GradleVersionsCompatibilityTest {
     @DisplayName("Should work in Gradle version")
     fun shouldWorkInGradleVersion(gradleVersion: String) {
         val result = GradleRunner.create()
-                .withProjectDir(projectDir)
-                .withGradleVersion(gradleVersion)
-                .withPluginClasspath()
-                .withArguments("integrationTest", "--info", "--stacktrace")
-                .forwardOutput()
-                .build()
+            .withProjectDir(projectDir)
+            .withGradleVersion(gradleVersion)
+            .withPluginClasspath()
+            .withArguments("integrationTest", "--info", "--stacktrace")
+            .forwardOutput()
+            .build()
 
-        assert(result, "result")
-                .prop("for task integrationTest") { it.task(":integrationTest") }
-                .isNotNull {
-                    it.prop("outcome", BuildTask::getOutcome)
-                            .isIn(TaskOutcome.NO_SOURCE, TaskOutcome.UP_TO_DATE)
-                }
+        assertThat(result, "result")
+            .prop("for task integrationTest") { it.task(":integrationTest") }
+            .isNotNull()
+            .prop("outcome", BuildTask::getOutcome)
+            .isIn(TaskOutcome.NO_SOURCE, TaskOutcome.UP_TO_DATE)
     }
 
 
