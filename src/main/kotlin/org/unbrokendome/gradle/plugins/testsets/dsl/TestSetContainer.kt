@@ -24,7 +24,7 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
             create(name, TestSet::class.java)
 
     @JvmDefault
-    fun create(name: String, configureAction: Action<TestSet>): TestSet =
+    fun createTestSet(name: String, configureAction: Action<TestSet>): TestSet =
         create(name, TestSet::class.java, configureAction)
 
     @JvmDefault
