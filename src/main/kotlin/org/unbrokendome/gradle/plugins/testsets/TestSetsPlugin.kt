@@ -17,9 +17,12 @@ import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.unbrokendome.gradle.plugins.testsets.dsl.*
+import org.unbrokendome.gradle.plugins.testsets.internal.*
 import org.unbrokendome.gradle.plugins.testsets.internal.ConfigurationObserver
 import org.unbrokendome.gradle.plugins.testsets.internal.IdeaModuleObserver
 import org.unbrokendome.gradle.plugins.testsets.internal.SourceSetObserver
+import org.unbrokendome.gradle.plugins.testsets.internal.TestTaskEnvironmentObserver
+import org.unbrokendome.gradle.plugins.testsets.internal.TestTaskSystemPropertiesObserver
 import org.unbrokendome.gradle.plugins.testsets.util.extension
 import org.unbrokendome.gradle.plugins.testsets.util.get
 import org.unbrokendome.gradle.plugins.testsets.util.registerOrConfigure
@@ -42,7 +45,9 @@ class TestSetsPlugin
 
         val observers = listOf(
             SourceSetObserver(project),
-            ConfigurationObserver(project)
+            ConfigurationObserver(project),
+            TestTaskEnvironmentObserver(project.tasks),
+            TestTaskSystemPropertiesObserver(project.tasks)
         )
 
         testSets.all { testSet ->
@@ -157,6 +162,8 @@ class TestSetsPlugin
             testSet.sourceSet.let { sourceSet ->
                 task.testClassesDirs = sourceSet.output.classesDirs
                 task.classpath = sourceSet.runtimeClasspath
+                task.environment = testSet.environment
+                task.systemProperties = testSet.systemProperties
             }
         }
     }

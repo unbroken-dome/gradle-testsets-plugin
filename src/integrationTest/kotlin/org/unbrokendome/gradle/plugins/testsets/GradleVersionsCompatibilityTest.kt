@@ -10,52 +10,70 @@ import org.gradle.testkit.runner.TaskOutcome
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 
 
-class GradleVersionsCompatibilityTest {
+class GradleVersionsCompatibilityTest : AbstractGradleIntegrationTest() {
 
-    private val projectDir = createTempDir("gradle-testsets-plugin-test")
+    abstract inner class AbstractVersionsCompatibilityTest {
 
+        @ValueSource(strings = ["4.10.3", "5.0", "5.1.1", "5.6.2"])
+        @ParameterizedTest(name = "Gradle {0}")
+        @DisplayName("Should work in Gradle version")
+        fun shouldWorkInGradleVersion(gradleVersion: String) {
+            val result = GradleRunner.create()
+                .withProjectDir(projectDir)
+                .withGradleVersion(gradleVersion)
+                .withPluginClasspath()
+                .withArguments("integrationTest", "--info", "--stacktrace")
+                .forwardOutput()
+                .build()
 
-    @BeforeEach
-    fun setup() {
-        projectDir.resolve("build.gradle.kts")
-            .writeText(
-                """
-                    plugins {
-                       id("org.unbroken-dome.test-sets")
-                    }
-
-                    testSets.create("integrationTest")
-                    """.trimIndent()
-            )
+            assertThat(result, "result")
+                .prop("for task integrationTest") { it.task(":integrationTest") }
+                .isNotNull()
+                .prop("outcome", BuildTask::getOutcome)
+                .isIn(TaskOutcome.NO_SOURCE, TaskOutcome.UP_TO_DATE)
+        }
     }
 
 
-    @ValueSource(strings = ["4.10.3", "5.0", "5.1.1", "5.6.2"])
-    @ParameterizedTest(name = "Gradle {0}")
-    @DisplayName("Should work in Gradle version")
-    fun shouldWorkInGradleVersion(gradleVersion: String) {
-        val result = GradleRunner.create()
-            .withProjectDir(projectDir)
-            .withGradleVersion(gradleVersion)
-            .withPluginClasspath()
-            .withArguments("integrationTest", "--info", "--stacktrace")
-            .forwardOutput()
-            .build()
+    @Nested
+    inner class KotlinDsl : AbstractVersionsCompatibilityTest() {
 
-        assertThat(result, "result")
-            .prop("for task integrationTest") { it.task(":integrationTest") }
-            .isNotNull()
-            .prop("outcome", BuildTask::getOutcome)
-            .isIn(TaskOutcome.NO_SOURCE, TaskOutcome.UP_TO_DATE)
+        @BeforeEach
+        fun setup() {
+
+            directory(projectDir) {
+                file("build.gradle.kts", """ 
+                plugins {
+                    id("org.unbroken-dome.test-sets")
+                }
+                
+                testSets.create("integrationTest")
+            """)
+            }
+        }
     }
 
 
-    @AfterEach
-    fun removeProjectDir() {
-        projectDir.deleteRecursively()
+    @Nested
+    inner class GroovyDsl : AbstractVersionsCompatibilityTest() {
+
+        @BeforeEach
+        fun setup() {
+
+            directory(projectDir) {
+                file("build.gradle", """ 
+                plugins {
+                    id('org.unbroken-dome.test-sets')
+                }
+                
+                testSets { integrationTest }
+            """)
+            }
+        }
     }
 }
