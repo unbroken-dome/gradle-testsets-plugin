@@ -14,4 +14,7 @@ internal object NamingConventions {
 
     fun artifactConfigurationName(testSetName: String) =
             testSetName
+
+    fun jacocoReportTaskName(testTaskName: String) =
+            "jacoco${testTaskName.capitalize()}Report"
 }

@@ -5,6 +5,7 @@ import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 import org.gradle.api.plugins.JavaBasePlugin
 import org.gradle.api.plugins.JavaPlugin
+import org.gradle.api.tasks.SourceSet
 import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.testing.Test
 import org.gradle.internal.reflect.Instantiator
@@ -13,24 +14,23 @@ import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.EclipseModel
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
 import org.gradle.plugins.ide.idea.IdeaPlugin
-import org.unbrokendome.gradle.plugins.testsets.dsl.TestLibrary
-import org.unbrokendome.gradle.plugins.testsets.dsl.TestSet
-import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetBase
-import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetBaseInternal
-import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetContainer
-import org.unbrokendome.gradle.plugins.testsets.dsl.testSetContainer
+import org.gradle.testing.jacoco.plugins.JacocoPlugin
+import org.gradle.testing.jacoco.tasks.JacocoReport
+import org.unbrokendome.gradle.plugins.testsets.dsl.*
 import org.unbrokendome.gradle.plugins.testsets.internal.ConfigurationObserver
 import org.unbrokendome.gradle.plugins.testsets.internal.IdeaModuleObserver
 import org.unbrokendome.gradle.plugins.testsets.internal.SourceSetObserver
 import org.unbrokendome.gradle.plugins.testsets.util.extension
 import org.unbrokendome.gradle.plugins.testsets.util.get
 import org.unbrokendome.gradle.plugins.testsets.util.registerOrConfigure
+import org.unbrokendome.gradle.plugins.testsets.util.sourceSets
 import javax.inject.Inject
 
 
 class TestSetsPlugin
-@Inject constructor(private val instantiator: Instantiator)
-    : Plugin<Project> {
+@Inject constructor(
+    private val instantiator: Instantiator
+) : Plugin<Project> {
 
 
     override fun apply(project: Project) {
@@ -41,8 +41,9 @@ class TestSetsPlugin
         project.extensions.add(TestSetContainer::class.java, "testSets", testSets)
 
         val observers = listOf(
-                SourceSetObserver(project),
-                ConfigurationObserver(project))
+            SourceSetObserver(project),
+            ConfigurationObserver(project)
+        )
 
         testSets.all { testSet ->
             project.createConfigurationsForTestSet(testSet)
@@ -54,6 +55,12 @@ class TestSetsPlugin
 
         testSets.withType(TestSet::class.java) { testSet ->
             project.addTestTaskFor(testSet)
+        }
+
+        project.plugins.withType(JacocoPlugin::class.java) {
+            testSets.withType(TestSet::class.java) { testSet ->
+                project.addJacocoReportTaskFor(testSet)
+            }
         }
 
         project.plugins.withType(EclipsePlugin::class.java) {
@@ -76,8 +83,10 @@ class TestSetsPlugin
             registerOrConfigure(testSet.runtimeElementsConfigurationName) { conf ->
                 conf.isVisible = false
                 conf.isCanBeResolved = false
-                conf.extendsFrom(this[testSet.implementationConfigurationName],
-                        this[testSet.runtimeOnlyConfigurationName])
+                conf.extendsFrom(
+                    this[testSet.implementationConfigurationName],
+                    this[testSet.runtimeOnlyConfigurationName]
+                )
             }
 
             if (testSet is TestLibrary) {
@@ -100,16 +109,16 @@ class TestSetsPlugin
 
 
     private fun Project.addJarTaskFromTestSet(testSet: TestSetBase) =
-            tasks.registerOrConfigure(testSet.jarTaskName, Jar::class) { task ->
-                task.description = "Assembles a jar archive containing the ${testSet.name} classes."
-                task.group = BasePlugin.BUILD_GROUP
-                task.from(testSet.sourceSet.output)
+        tasks.registerOrConfigure(testSet.jarTaskName, Jar::class) { task ->
+            task.description = "Assembles a jar archive containing the ${testSet.name} classes."
+            task.group = BasePlugin.BUILD_GROUP
+            task.from(testSet.sourceSet.output)
 
-                // Classifier is deprecated, but the new archiveClassifier was added only in Gradle 5.1
-                // For compatibility we will still use the old one
-                @Suppress("DEPRECATION")
-                task.classifier = testSet.classifier
-            }
+            // Classifier is deprecated, but the new archiveClassifier was added only in Gradle 5.1
+            // For compatibility we will still use the old one
+            @Suppress("DEPRECATION")
+            task.classifier = testSet.classifier
+        }
 
 
     @Suppress("NestedLambdaShadowedImplicitParameter")
@@ -124,13 +133,15 @@ class TestSetsPlugin
             if (testSet.createArtifact) {
                 val jarTask = tasks.named(testSet.jarTaskName)
                 val artifact = artifacts.add(
-                        testSet.runtimeElementsConfigurationName,
-                        jarTask)
+                    testSet.runtimeElementsConfigurationName,
+                    jarTask
+                )
 
                 if (testSet is TestLibrary) {
                     artifacts.add(
-                            testSet.apiElementsConfigurationName,
-                            artifact)
+                        testSet.apiElementsConfigurationName,
+                        artifact
+                    )
                 }
             }
         }
@@ -151,21 +162,39 @@ class TestSetsPlugin
     }
 
 
+    private fun Project.addJacocoReportTaskFor(testSet: TestSet) {
+
+        // JacocoReport tasks cannot be registered with register() because they install an afterEvaluate hook
+        // which Gradle forbids when inside a deferred configuration block
+        tasks.maybeCreate(testSet.jacocoReportTaskName, JacocoReport::class.java).also { task ->
+            task.group = JavaBasePlugin.VERIFICATION_GROUP
+            task.description = "Generates code coverage report for the ${testSet.testTaskName} tests."
+
+            val testTask = tasks.getByName(testSet.testTaskName)
+            task.executionData(testTask)
+            task.sourceSets(this.sourceSets[SourceSet.MAIN_SOURCE_SET_NAME])
+        }
+    }
+
+
     @Suppress("NestedLambdaShadowedImplicitParameter")
     private fun Project.modifyEclipseClasspath(testSet: TestSetBase) {
         val eclipseModel: EclipseModel = extension()
         with(eclipseModel.classpath) {
-            plusConfigurations.addAll(listOf(
+            plusConfigurations.addAll(
+                listOf(
                     configurations[testSet.compileClasspathConfigurationName],
-                    configurations[testSet.runtimeClasspathConfigurationName]))
+                    configurations[testSet.runtimeClasspathConfigurationName]
+                )
+            )
 
             // Mark the source folders for the test set to contain test code
             file.whenMerged {
                 val classpath = it as Classpath
                 classpath.entries.asSequence()
-                        .filterIsInstance<SourceFolder>()
-                        .filter { it.entryAttributes["gradle_scope"] == testSet.sourceSetName }
-                        .forEach { it.entryAttributes["test"] = true }
+                    .filterIsInstance<SourceFolder>()
+                    .filter { it.entryAttributes["gradle_scope"] == testSet.sourceSetName }
+                    .forEach { it.entryAttributes["test"] = true }
             }
         }
     }
