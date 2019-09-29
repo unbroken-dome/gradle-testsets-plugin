@@ -1,3 +1,4 @@
+import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -30,10 +31,8 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
 
-    testImplementation(kotlin("stdlib-jdk8"))
-    testImplementation(kotlin("reflect"))
     testImplementation(kotlin("gradle-plugin"))
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.12")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.20")
 
     "integrationTestImplementation"(gradleApi())
 }
@@ -42,6 +41,15 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
     kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=enable")
+}
+
+
+configurations.all {
+    resolutionStrategy.eachDependency {
+        if (requested.group == "org.jetbrains.kotlin") {
+            useVersion(getKotlinPluginVersion()!!)
+        }
+    }
 }
 
 

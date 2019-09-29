@@ -1,8 +1,7 @@
 package org.unbrokendome.gradle.plugins.testsets
 
-import assertk.assert
+import assertk.assertThat
 import assertk.assertions.isEqualTo
-import assertk.assertions.isInstanceOf
 import assertk.assertions.prop
 import org.gradle.api.Project
 import org.gradle.api.artifacts.Configuration
@@ -12,17 +11,17 @@ import org.gradle.api.tasks.bundling.Jar
 import org.gradle.testfixtures.ProjectBuilder
 import org.junit.jupiter.api.Test
 import org.unbrokendome.gradle.plugins.testsets.dsl.testSets
-import org.unbrokendome.gradle.plugins.testsets.testutils.containsItem
-import org.unbrokendome.gradle.plugins.testsets.testutils.hasSingleItem
+import org.unbrokendome.gradle.plugins.testsets.testutils.assertions.containsItem
+import org.unbrokendome.gradle.plugins.testsets.testutils.assertions.containsTask
+import org.unbrokendome.gradle.plugins.testsets.testutils.assertions.hasSingleItem
 
 
-@Suppress("NestedLambdaShadowedImplicitParameter")
 class ArtifactTest {
 
     private val project: Project = ProjectBuilder.builder().build()
-            .also {
-                it.plugins.apply(TestSetsPlugin::class.java)
-            }
+        .also {
+            it.plugins.apply(TestSetsPlugin::class.java)
+        }
 
 
     @Test
@@ -32,13 +31,10 @@ class ArtifactTest {
             it.classifier = "foo-classifier"
         }
 
-        assert(project.tasks, "tasks")
-                .containsItem("fooJar") {
-                    it.isInstanceOf(Jar::class.java) {
-                        it.prop("classifier", Jar::getClassifier)
-                                .isEqualTo("foo-classifier")
-                    }
-                }
+        assertThat(this::project)
+            .containsTask<Jar>("fooJar")
+            .prop("classifier", @Suppress("DEPRECATION") Jar::getClassifier)
+            .isEqualTo("foo-classifier")
     }
 
 
@@ -51,14 +47,12 @@ class ArtifactTest {
 
         project.evaluate()
 
-        assert(project.configurations, "configurations")
-                .containsItem("foo") {
-                    it.prop("allArtifacts", Configuration::getAllArtifacts)
-                            .hasSingleItem {
-                                it.prop("classifier", PublishArtifact::getClassifier)
-                                        .isEqualTo("foo-classifier")
-                            }
-                }
+        assertThat(project.configurations, "configurations")
+            .containsItem("foo")
+            .prop("allArtifacts", Configuration::getAllArtifacts)
+            .hasSingleItem()
+            .prop("classifier", PublishArtifact::getClassifier)
+            .isEqualTo("foo-classifier")
     }
 
 
