@@ -13,7 +13,7 @@ repositories {
 }
 
 
-val integrationTest by sourceSets.creating
+val integrationTest: SourceSet by sourceSets.creating
 
 
 configurations {
@@ -23,8 +23,7 @@ configurations {
 
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
-    implementation(kotlin("reflect"))
+    compileOnly(kotlin("stdlib-jdk8"))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
     testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.1")
