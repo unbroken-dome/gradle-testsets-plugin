@@ -32,7 +32,7 @@ class GradleVersionsCompatibilityTest {
     }
 
 
-    @ValueSource(strings = ["4.10", "4.10.2", "5.0", "5.1.1"])
+    @ValueSource(strings = ["4.10.3", "5.0", "5.1.1", "5.6.2"])
     @ParameterizedTest(name = "Gradle {0}")
     @DisplayName("Should work in Gradle version")
     fun shouldWorkInGradleVersion(gradleVersion: String) {
