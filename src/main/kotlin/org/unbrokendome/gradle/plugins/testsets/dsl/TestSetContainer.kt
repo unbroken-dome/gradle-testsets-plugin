@@ -24,6 +24,10 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
             create(name, TestSet::class.java)
 
     @JvmDefault
+    fun create(name: String, configureAction: Action<TestSet>): TestSet =
+        create(name, TestSet::class.java, configureAction)
+
+    @JvmDefault
     override fun create(name: String,
                         @DelegatesTo(TestSet::class, strategy = Closure.DELEGATE_FIRST)
                         configureClosure: Closure<Any>): TestSet =
@@ -63,6 +67,7 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
 }
 
 
+@Suppress("DEPRECATION")
 private open class DefaultTestSetContainer
 @Inject constructor(private val project: Project, instantiator: Instantiator)
 // Use this constructor, as they are still supporting it because 'nebula.lint' uses it
