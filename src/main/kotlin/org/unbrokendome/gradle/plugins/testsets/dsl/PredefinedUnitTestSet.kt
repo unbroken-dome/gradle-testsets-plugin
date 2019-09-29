@@ -11,8 +11,24 @@ internal class PredefinedUnitTestSet(container: TestSetContainer, sourceSet: Sou
     override val testTaskName: String
         get() = JavaPlugin.TEST_TASK_NAME
 
+
     override val jarTaskName: String
         get() = "testJar"
 
+
     override var classifier: String = "tests"
+
+
+    override var environment: Map<String, Any> = mutableMapOf()
+        set(value) {
+            field = value
+            notifyObservers { it.environmentVariablesChanged(this, value) }
+        }
+
+
+    override var systemProperties: Map<String, Any?> = mutableMapOf()
+        set(value) {
+            field = value
+            notifyObservers { it.systemPropertiesChanged(this, value) }
+        }
 }

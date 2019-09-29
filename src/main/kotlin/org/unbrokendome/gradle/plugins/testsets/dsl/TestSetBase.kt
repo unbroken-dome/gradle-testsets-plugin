@@ -149,6 +149,10 @@ internal interface TestSetObserver {
     fun importAdded(testSet: TestSetBase, added: TestLibrary) {}
 
     fun importRemoved(testSet: TestSetBase, removed: TestLibrary) {}
+
+    fun environmentVariablesChanged(testSet: TestSetBase, newEnvironment: Map<String, Any?>) {}
+
+    fun systemPropertiesChanged(testSet: TestSetBase, newProperties: Map<String, Any?>) {}
 }
 
 
@@ -258,7 +262,7 @@ internal abstract class AbstractTestSetBase(
     }
 
 
-    private fun notifyObservers(action: (TestSetObserver) -> Unit) {
+    protected fun notifyObservers(action: (TestSetObserver) -> Unit) {
         for (observer in observers) {
             action(observer)
         }
