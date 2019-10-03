@@ -4,7 +4,6 @@ import assertk.assertThat
 import assertk.assertions.isEqualTo
 import assertk.assertions.isNotNull
 import assertk.assertions.prop
-import org.gradle.internal.file.DefaultFileMetadata.file
 import org.gradle.testkit.runner.BuildTask
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
@@ -14,21 +13,6 @@ import org.junit.jupiter.params.provider.ValueSource
 
 
 class EnvironmentVariablesIntegrationTest : AbstractGradleIntegrationTest() {
-    companion object {
-        const val TEST_FILE = """
-                    import static org.junit.jupiter.api.Assertions.*;
-                    import org.junit.jupiter.api.Test;
-                    
-                    class EnvironmentTest {
-                        
-                        @Test
-                        void shouldHaveEnvironmentAvailable() {
-                            String value = System.getenv("TESTVAR");
-                            assertEquals("TESTVALUE", value);
-                        }
-                    }
-                """
-    }
 
     @ParameterizedTest
     @ValueSource(strings = [
@@ -66,7 +50,19 @@ class EnvironmentVariablesIntegrationTest : AbstractGradleIntegrationTest() {
             """)
 
             directory("src/integrationTest/java") {
-                file("EnvironmentTest.java", TEST_FILE)
+                file("EnvironmentTest.java", """
+                            import static org.junit.jupiter.api.Assertions.*;
+                            import org.junit.jupiter.api.Test;
+                            
+                            class EnvironmentTest {
+                                
+                                @Test
+                                void shouldHaveEnvironmentAvailable() {
+                                    String value = System.getenv("TESTVAR");
+                                    assertEquals("TESTVALUE", value);
+                                }
+                            }
+                        """)
             }
 
             val result = runGradle("integrationTest")
@@ -93,7 +89,9 @@ class EnvironmentVariablesIntegrationTest : AbstractGradleIntegrationTest() {
                 }
                 
                 testSets {
-                    createTestSet("integrationTest") { }
+                    createTestSet("integrationTest") { 
+                        environment("TESTVAR2", "TESTVALUE")
+                    }
                 }
                 
                 dependencies {
@@ -107,7 +105,21 @@ class EnvironmentVariablesIntegrationTest : AbstractGradleIntegrationTest() {
             """)
 
             directory("src/integrationTest/java") {
-                file("EnvironmentTest.java", TEST_FILE)
+                file("EnvironmentTest.java", """
+                            import static org.junit.jupiter.api.Assertions.*;
+                            import org.junit.jupiter.api.Test;
+                            
+                            class EnvironmentTest {
+                                
+                                @Test
+                                void shouldHaveEnvironmentAvailable() {
+                                    String value = System.getenv("TESTVAR");
+                                    assertEquals("TESTVALUE", value);
+                                    value = System.getenv("TESTVAR2");
+                                    assertEquals("TESTVALUE", value);
+                                }
+                            }
+                        """)
             }
 
             val result = GradleRunner.create()
