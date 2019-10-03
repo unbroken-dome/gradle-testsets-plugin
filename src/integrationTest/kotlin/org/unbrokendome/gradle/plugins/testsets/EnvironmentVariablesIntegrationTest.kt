@@ -51,18 +51,18 @@ class EnvironmentVariablesIntegrationTest : AbstractGradleIntegrationTest() {
 
             directory("src/integrationTest/java") {
                 file("EnvironmentTest.java", """
-                            import static org.junit.jupiter.api.Assertions.*;
-                            import org.junit.jupiter.api.Test;
-                            
-                            class EnvironmentTest {
-                                
-                                @Test
-                                void shouldHaveEnvironmentAvailable() {
-                                    String value = System.getenv("TESTVAR");
-                                    assertEquals("TESTVALUE", value);
-                                }
-                            }
-                        """)
+                    import static org.junit.jupiter.api.Assertions.*;
+                    import org.junit.jupiter.api.Test;
+                    
+                    class EnvironmentTest {
+                        
+                        @Test
+                        void shouldHaveEnvironmentAvailable() {
+                            String value = System.getenv("TESTVAR");
+                            assertEquals("TESTVALUE", value);
+                        }
+                    }
+                """)
             }
 
             val result = runGradle("integrationTest")
@@ -106,20 +106,20 @@ class EnvironmentVariablesIntegrationTest : AbstractGradleIntegrationTest() {
 
             directory("src/integrationTest/java") {
                 file("EnvironmentTest.java", """
-                            import static org.junit.jupiter.api.Assertions.*;
-                            import org.junit.jupiter.api.Test;
-                            
-                            class EnvironmentTest {
-                                
-                                @Test
-                                void shouldHaveEnvironmentAvailable() {
-                                    String value = System.getenv("TESTVAR");
-                                    assertEquals("TESTVALUE", value);
-                                    value = System.getenv("TESTVAR2");
-                                    assertEquals("TESTVALUE", value);
-                                }
-                            }
-                        """)
+                    import static org.junit.jupiter.api.Assertions.*;
+                    import org.junit.jupiter.api.Test;
+                    
+                    class EnvironmentTest {
+                        
+                        @Test
+                        void shouldHaveEnvironmentAvailable() {
+                            String value = System.getenv("TESTVAR");
+                            assertEquals("TESTVALUE", value);
+                            value = System.getenv("TESTVAR2");
+                            assertEquals("TESTVALUE", value);
+                        }
+                    }
+                """)
             }
 
             val result = GradleRunner.create()
