@@ -14,7 +14,7 @@ internal class TestTaskEnvironmentObserver(
     override fun environmentVariablesChanged(testSet: TestSetBase, newEnvironment: Map<String, Any?>) {
         val testTaskName = (testSet as TestSet).testTaskName
         (tasks.findByName(testTaskName) as? Test?)?.let { task ->
-            task.environment = newEnvironment
+            task.environment(newEnvironment)
         }
     }
 }
