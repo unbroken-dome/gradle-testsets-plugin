@@ -71,7 +71,7 @@ class GradleVersionsCompatibilityTest : AbstractGradleIntegrationTest() {
                     id('org.unbroken-dome.test-sets')
                 }
                 
-                testSets { integrationTest }
+                testSets { integrationTest }
             """)
             }
         }
