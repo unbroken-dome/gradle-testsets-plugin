@@ -163,7 +163,7 @@ class TestSetsPlugin
                 task.testClassesDirs = sourceSet.output.classesDirs
                 task.classpath = sourceSet.runtimeClasspath
                 task.environment(testSet.environment)
-                task.systemProperties = testSet.systemProperties
+                task.systemProperties(testSet.systemProperties)
             }
         }
     }
