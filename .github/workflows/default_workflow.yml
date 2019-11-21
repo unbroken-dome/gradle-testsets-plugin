@@ -1,0 +1,23 @@
+name: CI
+on:
+  push:
+    branches: 
+      - master
+  pull_request:
+    branches: 
+      - master
+    types: [edited, opened, synchronize]
+jobs:
+  build:
+    runs-on: [ubuntu-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build all artifacts
+      run: |
+        ./gradlew --no-daemon assemble
+    - name: Run all unit tests
+      run: |
+        ./gradlew --no-daemon test
+    - name: Run all integration tests
+      run: |
+        ./gradlew --no-daemon integrationTest
