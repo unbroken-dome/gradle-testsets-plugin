@@ -7,7 +7,6 @@ import assertk.assertions.prop
 import org.gradle.testkit.runner.BuildTask
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -19,7 +18,7 @@ class GradleVersionsCompatibilityTest : AbstractGradleIntegrationTest() {
 
     abstract inner class AbstractVersionsCompatibilityTest {
 
-        @ValueSource(strings = ["4.10.3", "5.0", "5.1.1", "5.6.2"])
+        @ValueSource(strings = ["5.1.1", "5.6.2", "6.0", "6.0.1"])
         @ParameterizedTest(name = "Gradle {0}")
         @DisplayName("Should work in Gradle version")
         fun shouldWorkInGradleVersion(gradleVersion: String) {
