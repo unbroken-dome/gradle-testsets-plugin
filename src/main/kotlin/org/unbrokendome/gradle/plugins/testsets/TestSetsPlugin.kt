@@ -171,15 +171,16 @@ class TestSetsPlugin
 
     private fun Project.addJacocoReportTaskFor(testSet: TestSet) {
 
-        // JacocoReport tasks cannot be registered with register() because they install an afterEvaluate hook
-        // which Gradle forbids when inside a deferred configuration block
-        tasks.maybeCreate(testSet.jacocoReportTaskName, JacocoReport::class.java).also { task ->
-            task.group = JavaBasePlugin.VERIFICATION_GROUP
-            task.description = "Generates code coverage report for the ${testSet.testTaskName} tests."
+        // The jacoco plugin already adds a jacocoTestReport task for the unit tests
+        if (testSet !is PredefinedUnitTestSet) {
+            tasks.register(testSet.jacocoReportTaskName, JacocoReport::class.java) { task ->
+                task.group = JavaBasePlugin.VERIFICATION_GROUP
+                task.description = "Generates code coverage report for the ${testSet.testTaskName} tests."
 
-            val testTask = tasks.getByName(testSet.testTaskName)
-            task.executionData(testTask)
-            task.sourceSets(this.sourceSets[SourceSet.MAIN_SOURCE_SET_NAME])
+                val testTask = tasks.getByName(testSet.testTaskName)
+                task.executionData(testTask)
+                task.sourceSets(this.sourceSets[SourceSet.MAIN_SOURCE_SET_NAME])
+            }
         }
     }
 
