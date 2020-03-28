@@ -413,6 +413,15 @@ testSets {
 ----
 
 
+== JaCoCo Support
+
+When using this plugin together with the https://docs.gradle.org/current/userguide/jacoco_plugin.html[JaCoCo plugin],
+a `JacocoReport` task will automatically be added for each test set.
+
+For example, creating a test set named `integrationTest` will automatically create a `JacocoReport` task named
+`jacocoIntegrationTestReport`.
+
+
 == IDE Support
 
 Neither Eclipse nor IntelliJ IDEA support the notion of multiple test sets per project / module, so what the
