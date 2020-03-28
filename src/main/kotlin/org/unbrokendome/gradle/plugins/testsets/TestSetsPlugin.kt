@@ -208,8 +208,10 @@ class TestSetsPlugin
 
 
     private fun Project.modifyIdeaModule(testSet: TestSetBase) {
-        // the initial setup logic is contained in the IdeaModuleObserver class too
-        val observer = IdeaModuleObserver(this, testSet)
-        (testSet as? TestSetBaseInternal)?.addObserver(observer)
+        if (testSet !is PredefinedUnitTestSet) {
+            // the initial setup logic is contained in the IdeaModuleObserver class too
+            val observer = IdeaModuleObserver(this, testSet)
+            (testSet as? TestSetBaseInternal)?.addObserver(observer)
+        }
     }
 }
