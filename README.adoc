@@ -359,10 +359,10 @@ plugins {
 testSets {
 
     // use the creating construct
-    val fooTest by creating { ... }
+    val fooTest by creating { /* ... */ }
 
     // or the create() method
-    create("barTest") { ... }
+    create("barTest") { /* ... */ }
 
     // use the libraries "container view" to create a library
     val myTestLib by libraries.creating
@@ -424,27 +424,25 @@ For example, creating a test set named `integrationTest` will automatically crea
 
 == IDE Support
 
-Neither Eclipse nor IntelliJ IDEA support the notion of multiple test sets per project / module, so what the
+Neither Eclipse nor IntelliJ IDEA support the notion of multiple test sets per project / module natively, so what the
 plugin does is only a "best fit" so you can at least run the tests from your IDE.
 
 === Eclipse
 
-When importing the Gradle project into Eclipse, the TestSets plugin will automatically add each test set's dependencies
-to the classpath.
+When importing the Gradle project into Eclipse, the TestSets plugin can automatically add each test set's dependencies
+to the classpath. This behavior is disabled by default since version 3.0 of the plugin, in order to not interfere with
+the internal classpath container that is created by the Eclipse Gradle integration.
+If necessary, you can enable this behavior by setting the following property in your `gradle.properties` file:
+
+[source,properties]
+.gradle.properties
+----
+org.unbroken-dome.test-sets.modifyEclipseClasspath=true
+----
 
 SourceSets that are generated for a test set are automatically mapped to source folders in Eclipse,
 without any further configuration. The plugin will try to mark each of these source folders as "test code"
 (the icon in the package explorer will have a slightly different shading).
-
-However, source folders in eclipse are really just that, with no additional isolation, and no possibility to define
-an independent classpath. That means that tests from one test set will never be executed in isolation, which may become
-an issue if you have files of the same name (e.g. log4j2-test.xml) in different test sets.
-
-Eclipse does not support different scopes for dependencies; all dependencies (main, test and additional test sets) are
-thrown into a shared "Gradle classpath container".
-
-Eclipse also does not support Gradle's concept of compile-only or runtime-only dependencies, so you will, for example,
-see even classes from runtime-only dependencies in code completion.
 
 === IntelliJ IDEA
 

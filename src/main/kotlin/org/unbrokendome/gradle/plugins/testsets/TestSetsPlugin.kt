@@ -35,6 +35,10 @@ class TestSetsPlugin
     private val instantiator: Instantiator
 ) : Plugin<Project> {
 
+    private companion object {
+        const val MODIFY_ECLIPSE_CLASSPATH_PROPERTY = "org.unbroken-dome.test-sets.modifyEclipseClasspath"
+    }
+
 
     override fun apply(project: Project) {
 
@@ -187,16 +191,27 @@ class TestSetsPlugin
 
     @Suppress("NestedLambdaShadowedImplicitParameter")
     private fun Project.modifyEclipseClasspath(testSet: TestSetBase) {
+
+        // Check the project property to see if we should do any modifications to the Eclipse classpath.
+        // By default we won't modify it since the Eclipse Gradle integration doesn't really care for modifications
+        // of the EclipseModel anymore.
+        val shouldModifyClasspath = project.findProperty(MODIFY_ECLIPSE_CLASSPATH_PROPERTY)
+            ?.toString()?.toBoolean() ?: false
+
         val eclipseModel: EclipseModel = extension()
         with(eclipseModel.classpath) {
-            plusConfigurations.addAll(
-                listOf(
-                    configurations[testSet.compileClasspathConfigurationName],
-                    configurations[testSet.runtimeClasspathConfigurationName]
+            if (shouldModifyClasspath) {
+                plusConfigurations.addAll(
+                    listOf(
+                        configurations[testSet.compileClasspathConfigurationName],
+                        configurations[testSet.runtimeClasspathConfigurationName]
+                    )
                 )
-            )
-
+            }
             // Mark the source folders for the test set to contain test code
+            // This is still useful, because the Eclipse Gradle integration does this based on the source set name
+            // (it will be marked as test if it contains the substring "test" in its name). That behavior might miss
+            // test sets that don't have "test" in their name, so set this flag for all test sets
             file.whenMerged {
                 val classpath = it as Classpath
                 classpath.entries.asSequence()
