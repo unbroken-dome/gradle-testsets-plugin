@@ -2,6 +2,7 @@ package org.unbrokendome.gradle.plugins.testsets.internal
 
 import org.gradle.api.Project
 import org.gradle.plugins.ide.idea.model.IdeaModel
+import org.unbrokendome.gradle.plugins.testsets.dsl.TestLibrary
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetBase
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetObserver
 import org.unbrokendome.gradle.plugins.testsets.util.extension
@@ -46,16 +47,20 @@ internal class IdeaModuleObserver(
 
 
     private fun updateDirectories() {
-        with (testSet.sourceSet) {
-            sourceDirs = getAllCodeSourceDirectorySets()
-                    .map { it.srcDirs }
-                    .flatten()
-                    .toSet()
-            resourceDirs = resources.srcDirs.toSet()
-        }
+        // IDEA test source directories can only depend on [production] source directories, so test
+        // libraries can't be marked as test code :(
+        if (testSet !is TestLibrary) {
+            with(testSet.sourceSet) {
+                sourceDirs = getAllCodeSourceDirectorySets()
+                        .map { it.srcDirs }
+                        .flatten()
+                        .toSet()
+                resourceDirs = resources.srcDirs.toSet()
+            }
 
-        ideaModule.testSourceDirs = ideaModule.testSourceDirs + sourceDirs
-        ideaModule.testResourceDirs = ideaModule.testResourceDirs + resourceDirs
+            ideaModule.testSourceDirs = ideaModule.testSourceDirs + sourceDirs
+            ideaModule.testResourceDirs = ideaModule.testResourceDirs + resourceDirs
+        }
     }
 
 
