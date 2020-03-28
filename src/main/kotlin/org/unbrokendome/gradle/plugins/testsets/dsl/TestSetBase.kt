@@ -69,6 +69,7 @@ interface TestSetBase : Named {
     /**
      * The name of the configuration containing the compile dependencies for this test set.
      */
+    @Suppress("deprecation")
     val compileConfigurationName: String
         get() = sourceSet.compileConfigurationName
 
@@ -99,6 +100,7 @@ interface TestSetBase : Named {
     /**
      * The name of the configuration containing the runtime dependencies for this test set.
      */
+    @Suppress("deprecation")
     val runtimeConfigurationName: String
         get() = sourceSet.runtimeConfigurationName
 
