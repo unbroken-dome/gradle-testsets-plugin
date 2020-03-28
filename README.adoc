@@ -8,13 +8,13 @@ ifdef::env-github[]
 :toc-placement!:
 endif::[]
 
+
 = Gradle TestSets plugin
 
-A plugin for the Gradle build system that allows specifying test sets (like integration or acceptance tests). A test set is a logical grouping of a source set and related dependency configurations, tasks and artifacts.
+A plugin for the Gradle build system that allows specifying test sets (like integration or acceptance tests).
+A test set is a logical grouping of a source set and related dependency configurations, tasks and artifacts.
 
-IMPORTANT: Version 2.x of this plugin is a complete rewrite in Kotlin, using some recent Gradle features for deferred configuration.
-As such, it requires *Gradle 4.10 or later*. If you are using an earlier version of Gradle, please refer to the
-https://github.com/unbroken-dome/gradle-testsets-plugin/tree/1.x[1.x versions] of the plugin.
+The plugin requires Gradle 5.1 or higher.
 
 toc::[]
 
@@ -31,7 +31,7 @@ Add the following to your build.gradle file:
 ----
 // The plugins block needs to be at the top of your build script
 plugins {
-    id 'org.unbroken-dome.test-sets' version '2.2.1'
+    id 'org.unbroken-dome.test-sets' version '3.0.0'
 }
 
 testSets {
@@ -68,7 +68,7 @@ To use the TestSets plugin, include the following in your Gradle script:
 [source,groovy]
 ----
 plugins {
-    id 'org.unbroken-dome.test-sets' version '2.2.1'
+    id 'org.unbroken-dome.test-sets' version '3.0.0'
 }
 ----
 
@@ -353,7 +353,7 @@ To create a test set, use any of the common idioms from the Kotlin DSL:
 [source,kotlin]
 ----
 plugins {
-    id("org.unbroken-dome.test-sets") version "2.2.1"
+    id("org.unbroken-dome.test-sets") version "3.0.0"
 }
 
 testSets {
@@ -392,7 +392,7 @@ putting their name, similar to Groovy (you need to put the names in quotes, howe
 import org.unbrokendome.gradle.plugins.testsets.dsl.TestLibrary
 
 plugins {
-    id("org.unbroken-dome.test-sets") version "2.2.1"
+    id("org.unbroken-dome.test-sets") version "3.0.0"
 }
 
 testSets {
