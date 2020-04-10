@@ -87,7 +87,7 @@ class TestSetsPlugin
 
 
     private fun Project.createConfigurationsForTestSet(testSet: TestSetBase) {
-        project.configurations.run {
+        with(configurations) {
 
             registerOrConfigure(testSet.runtimeElementsConfigurationName) { conf ->
                 conf.isVisible = false
@@ -112,6 +112,10 @@ class TestSetsPlugin
                     conf.extendsFrom(this[testSet.apiConfigurationName])
                 }
 
+                // for a test library, implementation should extend from api
+                named(testSet.implementationConfigurationName) { conf ->
+                    conf.extendsFrom(configurations[testSet.apiConfigurationName])
+                }
             }
         }
     }
