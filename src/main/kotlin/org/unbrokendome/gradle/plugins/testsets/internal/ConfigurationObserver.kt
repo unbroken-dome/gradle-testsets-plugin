@@ -12,11 +12,11 @@ internal class ConfigurationObserver(
 
     private companion object {
         val inheritedConfigurationNames: List<(TestSetBase) -> String> = listOf(
-                TestSetBase::compileConfigurationName,
+                TestSetBase::compileClasspathConfigurationName,
                 TestSetBase::compileOnlyConfigurationName,
                 TestSetBase::annotationProcessorConfigurationName,
                 TestSetBase::implementationConfigurationName,
-                TestSetBase::runtimeConfigurationName,
+                TestSetBase::runtimeClasspathConfigurationName,
                 TestSetBase::runtimeOnlyConfigurationName)
     }
 
