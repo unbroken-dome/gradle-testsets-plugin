@@ -28,7 +28,7 @@ class TestSetsPluginTest {
 
 
     @Test
-    fun `should have a predefined "unitTest" test set`() {
+    fun `should have a predefined 'unitTest' test set`() {
         assertThat(project.testSets, "testSets")
             .containsItem("unitTest")
             .isInstanceOf(TestSet::class)

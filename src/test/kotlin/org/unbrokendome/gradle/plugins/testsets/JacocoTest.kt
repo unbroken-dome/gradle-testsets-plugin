@@ -37,7 +37,7 @@ class JacocoTest {
 
             containsTask<JacocoReport>("jacocoFooReport")
                 .all {
-                    prop(JacocoReport::getExecutionData)
+                    prop("executionData") { it.executionData }
                         .transform { it.toSet() }
                         .containsOnly(jacocoTaskExtension.destinationFile)
                     prop("allSourceDirs", JacocoReport::getAllSourceDirs)
