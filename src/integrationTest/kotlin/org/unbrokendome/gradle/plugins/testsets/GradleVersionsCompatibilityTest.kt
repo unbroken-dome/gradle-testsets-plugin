@@ -18,7 +18,7 @@ class GradleVersionsCompatibilityTest : AbstractGradleIntegrationTest() {
 
     abstract inner class AbstractVersionsCompatibilityTest {
 
-        @ValueSource(strings = ["5.1.1", "5.6.2", "6.0", "6.0.1"])
+        @ValueSource(strings = ["5.1.1", "5.6.2", "6.0", "6.0.1", "7.0"])
         @ParameterizedTest(name = "Gradle {0}")
         @DisplayName("Should work in Gradle version")
         fun shouldWorkInGradleVersion(gradleVersion: String) {

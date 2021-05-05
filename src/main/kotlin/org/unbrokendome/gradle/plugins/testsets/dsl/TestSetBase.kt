@@ -67,13 +67,6 @@ interface TestSetBase : Named {
     var classifier: String
 
     /**
-     * The name of the configuration containing the compile dependencies for this test set.
-     */
-    @Suppress("deprecation")
-    val compileConfigurationName: String
-        get() = sourceSet.compileConfigurationName
-
-    /**
      * The name of the configuration containing the compile-only dependencies for this test set.
      */
     val compileOnlyConfigurationName: String
@@ -96,13 +89,6 @@ interface TestSetBase : Named {
      */
     val implementationConfigurationName: String
         get() = sourceSet.implementationConfigurationName
-
-    /**
-     * The name of the configuration containing the runtime dependencies for this test set.
-     */
-    @Suppress("deprecation")
-    val runtimeConfigurationName: String
-        get() = sourceSet.runtimeConfigurationName
 
     /**
      * The name of the configuration containing the runtime-only dependencies for this test set.

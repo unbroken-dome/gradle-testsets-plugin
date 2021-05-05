@@ -27,11 +27,11 @@ class TestSetConfigurationsTest {
     @ParameterizedTest
     @ValueSource(
         strings = [
-            "myTestCompile <- testCompile",
+            "myTestCompileClasspath <- testCompileClasspath",
             "myTestCompileOnly <- testCompileOnly",
             "myTestAnnotationProcessor <- testAnnotationProcessor",
             "myTestImplementation <- testImplementation",
-            "myTestRuntime <- testRuntime",
+            "myTestRuntimeClasspath <- testRuntimeClasspath",
             "myTestRuntimeOnly <- testRuntimeOnly"]
     )
     fun `New test set's configurations should extend the built-in test configurations`(configs: String) {
@@ -48,11 +48,11 @@ class TestSetConfigurationsTest {
     @ParameterizedTest
     @ValueSource(
         strings = [
-            "fooCompile <- barCompile",
+            "fooCompileClasspath <- barCompileClasspath",
             "fooCompileOnly <- barCompileOnly",
             "fooAnnotationProcessor <- barAnnotationProcessor",
             "fooImplementation <- barImplementation",
-            "fooRuntime <- barRuntime",
+            "fooRuntimeClasspath <- barRuntimeClasspath",
             "fooRuntimeOnly <- barRuntimeOnly"]
     )
     fun `Extending another test set should extend the configurations`(configs: String) {
