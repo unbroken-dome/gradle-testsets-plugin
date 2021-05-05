@@ -1,5 +1,4 @@
-import org.jetbrains.kotlin.gradle.plugin.getKotlinPluginVersion
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+@file:Suppress("HasPlatformType")
 
 plugins {
     kotlin("jvm")
@@ -16,10 +15,11 @@ repositories {
 
 val integrationTest: SourceSet by sourceSets.creating
 
-
-configurations {
-    "integrationTestImplementation" { extendsFrom(configurations["testImplementation"]) }
-    "integrationTestRuntimeOnly" { extendsFrom(configurations["testRuntimeOnly"]) }
+val integrationTestImplementation by configurations.getting {
+    extendsFrom(configurations["testImplementation"])
+}
+configurations.named("integrationTestRuntimeOnly") {
+    extendsFrom(configurations["testRuntimeOnly"])
 }
 
 
@@ -33,13 +33,15 @@ dependencies {
     testImplementation(kotlin("gradle-plugin"))
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.20")
 
-    "integrationTestImplementation"(gradleApi())
+    integrationTestImplementation(gradleApi())
 }
 
 
-tasks.withType<KotlinCompile> {
-    kotlinOptions.jvmTarget = "1.8"
-    kotlinOptions.freeCompilerArgs = listOf("-Xjvm-default=enable")
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "1.8"
+        freeCompilerArgs = listOf("-Xjvm-default=enable")
+    }
 }
 
 
