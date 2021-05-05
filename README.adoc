@@ -78,7 +78,7 @@ plugins {
 The TestSets plugin is designed to work in conjunction with the `java` plugin, or other JVM language plugins that
 follow a similar structure. It has been tested to work with `groovy`, `scala`, and `org.jetbrains.kotlin.jvm`.
 
-You will need to run Gradle 4.10 or higher with a JDK 8 or higher to use the plugin.
+You will need to run Gradle 5.1 or higher with a JDK 8 or higher to use the plugin.
 
 
 [TIP]
