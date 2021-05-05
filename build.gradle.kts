@@ -26,12 +26,14 @@ configurations.named("integrationTestRuntimeOnly") {
 dependencies {
     compileOnly(kotlin("stdlib-jdk8"))
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
-    testImplementation("org.junit.jupiter:junit-jupiter-params:5.3.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
+    testImplementation(platform("org.junit:junit-bom:5.7.1"))
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api")
+    testImplementation("org.junit.jupiter:junit-jupiter-params")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
 
     testImplementation(kotlin("gradle-plugin"))
-    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.20")
+    testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.24")
 
     integrationTestImplementation(gradleApi())
 }
