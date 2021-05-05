@@ -48,7 +48,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 configurations.all {
     resolutionStrategy.eachDependency {
         if (requested.group == "org.jetbrains.kotlin") {
-            useVersion(getKotlinPluginVersion()!!)
+            useVersion(embeddedKotlinVersion)
         }
     }
 }
