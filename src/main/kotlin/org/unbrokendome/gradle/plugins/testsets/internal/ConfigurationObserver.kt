@@ -7,17 +7,19 @@ import org.unbrokendome.gradle.plugins.testsets.dsl.TestSetObserver
 
 
 internal class ConfigurationObserver(
-        private val project: Project)
-    : TestSetObserver {
+    private val project: Project
+) : TestSetObserver {
 
     private companion object {
         val inheritedConfigurationNames: List<(TestSetBase) -> String> = listOf(
-                TestSetBase::compileClasspathConfigurationName,
-                TestSetBase::compileOnlyConfigurationName,
-                TestSetBase::annotationProcessorConfigurationName,
-                TestSetBase::implementationConfigurationName,
-                TestSetBase::runtimeClasspathConfigurationName,
-                TestSetBase::runtimeOnlyConfigurationName)
+            { it.compileClasspathConfigurationName },
+            {  it.compileClasspathConfigurationName },
+            {  it.compileOnlyConfigurationName },
+            {  it.annotationProcessorConfigurationName },
+            {  it.implementationConfigurationName },
+            {  it.runtimeClasspathConfigurationName },
+            {  it.runtimeOnlyConfigurationName },
+        )
     }
 
 
@@ -38,7 +40,8 @@ internal class ConfigurationObserver(
                 implementation.extendsFrom(importedApi)
             }
             implementation.dependencies.add(
-                    project.dependencies.create(added.sourceSet.output))
+                project.dependencies.create(added.sourceSet.output)
+            )
         }
 
         val runtimeOnly = project.configurations.findByName(testSet.runtimeOnlyConfigurationName)
@@ -49,8 +52,10 @@ internal class ConfigurationObserver(
     }
 
 
-    private fun addConfigurationExtension(testSet: TestSetBase, superTestSet: TestSetBase,
-                                          configurationNameAccessor: (TestSetBase) -> String) {
+    private fun addConfigurationExtension(
+        testSet: TestSetBase, superTestSet: TestSetBase,
+        configurationNameAccessor: (TestSetBase) -> String
+    ) {
 
         val configuration = project.configurations.findByName(configurationNameAccessor(testSet))
         val superConfiguration = project.configurations.findByName(configurationNameAccessor(superTestSet))
