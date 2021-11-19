@@ -409,7 +409,20 @@ testSets {
 
     // unitTest is already present, but we can configure it in the same way
     "unitTest" { imports(myTestLib) }
- }
+}
+
+dependencies{
+    "barTestImplementation"("org.random.import.test:1.2.3")
+}
+
+//or if you prefer extension funcitons
+
+fun DependencyHandler.barTestImplementation(dependencyNotation: Any): Dependency? =
+    add("testCommonImplementation", dependencyNotation)
+
+dependencies{
+    barTestImplementation("org.random.import.test:1.2.3")
+}
 ----
 
 
