@@ -3,7 +3,7 @@
 plugins {
     kotlin("jvm")
     `java-gradle-plugin`
-    id("com.gradle.plugin-publish") version "0.14.0"
+    id("com.gradle.plugin-publish") version "1.1.0"
     `maven-publish`
 }
 
@@ -57,11 +57,16 @@ configurations.all {
 
 
 gradlePlugin {
+    website.set(extra["pluginBundle.website"].toString())
+    vcsUrl.set(extra["pluginBundle.vcsUrl"].toString())
     testSourceSets(integrationTest)
 
     plugins.create("testSetsPlugin") {
         id = "org.unbroken-dome.test-sets"
         implementationClass = "org.unbrokendome.gradle.plugins.testsets.TestSetsPlugin"
+        displayName = extra["pluginBundle.displayName"].toString()
+        description = extra["pluginBundle.description"].toString()
+        tags.set(extra["pluginBundle.tags"].toString().split(','))
     }
 }
 
@@ -77,19 +82,5 @@ tasks {
 
     withType<Test> {
         useJUnitPlatform()
-    }
-}
-
-
-pluginBundle {
-    website = extra["pluginBundle.website"].toString()
-    vcsUrl = extra["pluginBundle.vcsUrl"].toString()
-    description = extra["pluginBundle.description"].toString()
-    tags = extra["pluginBundle.tags"].toString().split(',')
-
-    (plugins) {
-        "testSetsPlugin" {
-            displayName = extra["pluginBundle.displayName"].toString()
-        }
     }
 }
