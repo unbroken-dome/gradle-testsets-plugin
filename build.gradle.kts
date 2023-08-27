@@ -3,7 +3,7 @@
 plugins {
     kotlin("jvm")
     `java-gradle-plugin`
-    id("com.gradle.plugin-publish") version "1.1.0"
+    id("com.gradle.plugin-publish") version "1.2.1"
     `maven-publish`
 }
 
@@ -52,17 +52,20 @@ configurations.all {
 }
 
 
+@Suppress("UnstableApiUsage")
 gradlePlugin {
-    website.set(extra["pluginBundle.website"].toString())
-    vcsUrl.set(extra["pluginBundle.vcsUrl"].toString())
+    website.set("https://github.com/unbroken-dome/gradle-testsets-plugin")
+    vcsUrl.set("https://github.com/unbroken-dome/gradle-testsets-plugin.git")
     testSourceSets(integrationTest)
 
     plugins.create("testSetsPlugin") {
         id = "org.unbroken-dome.test-sets"
         implementationClass = "org.unbrokendome.gradle.plugins.testsets.TestSetsPlugin"
-        displayName = extra["pluginBundle.displayName"].toString()
-        description = extra["pluginBundle.description"].toString()
-        tags.set(extra["pluginBundle.tags"].toString().split(','))
+        displayName = "Gradle TestSets plugin"
+        description = "A plugin for the Gradle build system that allows specifying test sets (like integration or " +
+                "acceptance tests). Each test set is a logical grouping of a source set, dependency configurations, " +
+                "and related tasks and artifacts."
+        tags.addAll("testing","testset","test set","integration test")
     }
 }
 
