@@ -127,10 +127,7 @@ class TestSetsPlugin
             task.group = BasePlugin.BUILD_GROUP
             task.from(testSet.sourceSet.output)
 
-            // Classifier is deprecated, but the new archiveClassifier was added only in Gradle 5.1
-            // For compatibility we will still use the old one
-            @Suppress("DEPRECATION")
-            task.classifier = testSet.classifier
+            task.archiveClassifier.set(testSet.classifier)
         }
 
 
