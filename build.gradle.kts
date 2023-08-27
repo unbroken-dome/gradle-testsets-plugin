@@ -13,6 +13,15 @@ repositories {
 }
 
 
+kotlin {
+    jvmToolchain(11)
+
+    compilerOptions {
+        freeCompilerArgs.add("-Xjvm-default=all")
+    }
+}
+
+
 val integrationTest: SourceSet by sourceSets.creating
 
 val integrationTestImplementation by configurations.getting {
@@ -36,14 +45,6 @@ dependencies {
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.24")
 
     integrationTestImplementation(gradleApi())
-}
-
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = listOf("-Xjvm-default=enable")
-    }
 }
 
 

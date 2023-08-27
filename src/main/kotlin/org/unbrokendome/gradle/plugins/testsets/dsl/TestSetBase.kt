@@ -149,12 +149,10 @@ internal interface TestSetBaseInternal : TestSetBase {
     fun addObserver(observer: TestSetObserver, notifyExisting: Boolean = true)
 
 
-    @JvmDefault
     fun addObservers(observers: Iterable<TestSetObserver>, notifyExisting: Boolean = true) =
             observers.forEach { addObserver(it, notifyExisting) }
 
 
-    @JvmDefault
     fun addObservers(vararg observers: TestSetObserver, notifyExisting: Boolean = true) =
             observers.forEach { addObserver(it, notifyExisting) }
 }

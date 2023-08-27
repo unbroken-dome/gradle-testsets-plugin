@@ -36,7 +36,6 @@ interface TestSet : TestSetBase {
      *
      * @see org.gradle.api.tasks.testing.Test.environment
      */
-    @JvmDefault
     fun environment(environmentVariables: Map<String, Any>) {
         this.environment += environmentVariables
     }
@@ -49,7 +48,6 @@ interface TestSet : TestSetBase {
      *
      * @see org.gradle.api.tasks.testing.Test.environment
      */
-    @JvmDefault
     fun environment(name: String, value: Any) {
         this.environment += name to value
     }
@@ -70,7 +68,6 @@ interface TestSet : TestSetBase {
      * @param properties the system properties
      * @see org.gradle.api.tasks.testing.Test.systemProperties
      */
-    @JvmDefault
     fun systemProperties(properties: Map<String, *>) {
         this.systemProperties += properties
     }
@@ -82,7 +79,6 @@ interface TestSet : TestSetBase {
      * @param value The value for the property. May be null.
      * @return this
      */
-    @JvmDefault
     fun systemProperty(name: String, value: Any?) {
         this.systemProperties += name to value
     }

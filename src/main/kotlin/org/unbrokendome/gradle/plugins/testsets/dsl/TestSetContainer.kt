@@ -26,7 +26,6 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
      * @param name the name of the test set
      * @return the new [TestSet]
      */
-    @JvmDefault
     override fun create(name: String): TestSet =
         create(name, TestSet::class.java)
 
@@ -39,7 +38,6 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
      * @param configureAction an action for configuring the test set
      * @return the new [TestSet]
      */
-    @JvmDefault
     fun createTestSet(name: String, configureAction: Action<TestSet>): TestSet =
         create(name, TestSet::class.java, configureAction)
 
@@ -49,7 +47,6 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
      * @param name the name of the test library
      * @return the new [TestLibrary]
      */
-    @JvmDefault
     fun createLibrary(name: String): TestLibrary =
         create(name, TestLibrary::class.java)
 
@@ -62,7 +59,6 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
      * @param configureAction an action for configuring the test library
      * @return the new [TestLibrary]
      */
-    @JvmDefault
     fun createLibrary(name: String, configureAction: Action<TestLibrary>): TestLibrary =
         create(name, TestLibrary::class.java, configureAction)
 
@@ -70,7 +66,6 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
     /**
      * A [NamedDomainObjectContainer] that wraps this container but presents only the test libraries.
      */
-    @JvmDefault
     val libraries: NamedDomainObjectContainer<TestLibrary>
         get() = containerWithType(TestLibrary::class.java)
 
@@ -80,7 +75,6 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
      *
      * @param action an action that configures the [NamedDomainObjectContainer] presenting only the test libraries
      */
-    @JvmDefault
     fun libraries(action: Action<NamedDomainObjectContainer<TestLibrary>>) =
         action.execute(libraries)
 
