@@ -3,7 +3,6 @@ package org.unbrokendome.gradle.plugins.testsets.testutils.assertions
 import assertk.Assert
 import assertk.assertions.support.expected
 import assertk.assertions.support.show
-import org.gradle.api.internal.HasConvention
 import org.gradle.api.plugins.ExtensionAware
 
 
@@ -39,17 +38,3 @@ inline fun <reified E : Any> Assert<*>.hasExtension(name: String? = null) =
                 }
         }
     }
-
-
-inline fun <reified E : Any> Assert<*>.hasConvention() =
-    transform("convention of type ${show(E::class)}") { actual ->
-        if (actual !is HasConvention) {
-            expected("to have conventions")
-        }
-        try {
-            actual.convention.findPlugin(E::class.java)
-                ?: expected("to have a convention of type ${show(E::class)}")
-        } catch (ex: IllegalStateException) {
-            expected("to have a single convention of type ${show(E::class)}")
-        }
-}

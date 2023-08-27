@@ -7,19 +7,17 @@ import assertk.assertions.prop
 import org.gradle.api.Project
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.plugins.GroovyPlugin
-import org.gradle.api.tasks.GroovySourceSet
+import org.gradle.api.tasks.GroovySourceDirectorySet
 import org.gradle.api.tasks.SourceSet
 import org.gradle.testfixtures.ProjectBuilder
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
-import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.junit.jupiter.api.Test
 import org.unbrokendome.gradle.plugins.testsets.dsl.testSets
 import org.unbrokendome.gradle.plugins.testsets.testutils.assertions.containsItem
-import org.unbrokendome.gradle.plugins.testsets.testutils.assertions.hasConvention
+import org.unbrokendome.gradle.plugins.testsets.testutils.assertions.hasExtension
 import org.unbrokendome.gradle.plugins.testsets.util.sourceSets
 
 
-@Suppress("NestedLambdaShadowedImplicitParameter")
 class SourceSetTest {
 
     private val project: Project = ProjectBuilder.builder().build()
@@ -66,8 +64,7 @@ class SourceSetTest {
 
         assertThat(project.sourceSets, "sourceSets")
             .containsItem("foo")
-            .hasConvention<GroovySourceSet>()
-            .prop("groovy", GroovySourceSet::getGroovy)
+            .hasExtension<GroovySourceDirectorySet>("groovy")
             .prop("srcDirs", SourceDirectorySet::getSrcDirs)
             .containsOnly(project.file("src/bar/groovy"))
     }
@@ -75,7 +72,7 @@ class SourceSetTest {
 
     @Test
     fun `Changing dirName should be reflected in Kotlin source directories`() {
-        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
+        project.plugins.apply("org.jetbrains.kotlin.jvm")
 
         project.testSets.create("foo") {
             it.dirName = "bar"
@@ -83,8 +80,7 @@ class SourceSetTest {
 
         assertThat(project.sourceSets, "sourceSets")
             .containsItem("foo")
-            .hasConvention<KotlinSourceSet>()
-            .prop("kotlin") { it.kotlin }
+            .hasExtension<SourceDirectorySet>("kotlin")
             .prop("srcDirs", SourceDirectorySet::getSrcDirs)
             .containsOnly(
                 project.file("src/bar/kotlin"),

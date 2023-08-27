@@ -5,7 +5,6 @@ import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.NamedDomainObjectProvider
 import org.gradle.api.PolymorphicDomainObjectContainer
 import org.gradle.api.Project
-import org.gradle.api.plugins.JavaPluginConvention
 import org.gradle.api.tasks.SourceSetContainer
 import kotlin.reflect.KClass
 
@@ -15,7 +14,7 @@ internal inline fun <reified T : Any> Project.extension(): T =
 
 
 internal val Project.sourceSets: SourceSetContainer
-    get() = convention.getPlugin(JavaPluginConvention::class.java).sourceSets
+    get() = extension()
 
 
 internal fun <T : Any> NamedDomainObjectContainer<T>.registerOrConfigure(
