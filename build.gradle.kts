@@ -8,11 +8,6 @@ plugins {
 }
 
 
-repositories {
-    mavenCentral()
-}
-
-
 kotlin {
     jvmToolchain(11)
 
