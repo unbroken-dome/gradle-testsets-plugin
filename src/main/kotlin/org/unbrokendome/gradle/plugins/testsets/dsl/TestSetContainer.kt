@@ -1,7 +1,7 @@
 package org.unbrokendome.gradle.plugins.testsets.dsl
 
-import groovy.lang.Closure
-import groovy.lang.DelegatesTo
+import javax.inject.Inject
+import kotlin.reflect.KClass
 import org.gradle.api.Action
 import org.gradle.api.NamedDomainObjectContainer
 import org.gradle.api.PolymorphicDomainObjectContainer
@@ -13,9 +13,6 @@ import org.gradle.internal.reflect.Instantiator
 import org.gradle.model.internal.core.NamedEntityInstantiator
 import org.unbrokendome.gradle.plugins.testsets.util.get
 import org.unbrokendome.gradle.plugins.testsets.util.sourceSets
-import org.unbrokendome.gradle.plugins.testsets.util.toAction
-import javax.inject.Inject
-import kotlin.reflect.KClass
 
 
 /**
@@ -46,27 +43,6 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
     fun createTestSet(name: String, configureAction: Action<TestSet>): TestSet =
         create(name, TestSet::class.java, configureAction)
 
-
-    /**
-     * Creates a new test set with the specified name, adds it to the container, and configures it
-     * with the specified closure.
-     *
-     * This variant is intended for Groovy DSL support, with an annotated closure parameter for better
-     * IDE support.
-     *
-     * @param name the name of the test set
-     * @param configureClosure a closure for configuring the test set
-     * @return the new [TestSet]
-     */
-    @JvmDefault
-    override fun create(
-        name: String,
-        @DelegatesTo(TestSet::class, strategy = Closure.DELEGATE_FIRST)
-        configureClosure: Closure<Any>
-    ): TestSet =
-        create(name, TestSet::class.java, configureClosure.toAction())
-
-
     /**
      * Creates a new test library with the specified name, and adds it to the container.
      *
@@ -89,26 +65,6 @@ interface TestSetContainer : PolymorphicDomainObjectContainer<TestSetBase> {
     @JvmDefault
     fun createLibrary(name: String, configureAction: Action<TestLibrary>): TestLibrary =
         create(name, TestLibrary::class.java, configureAction)
-
-
-    /**
-     * Creates a new test library with the specified name, adds it to the container, and configures it with
-     * the specified closure.
-     *
-     * This variant is intended for Groovy DSL support, with an annotated closure parameter for better
-     * IDE support.
-     *
-     * @param name the name of the test library
-     * @param configureClosure an closure for configuring the test library
-     * @return the new [TestLibrary]
-     */
-    @JvmDefault
-    fun createLibrary(
-        name: String,
-        @DelegatesTo(TestLibrary::class, strategy = Closure.DELEGATE_FIRST)
-        configureClosure: Closure<*>
-    ): TestLibrary =
-        createLibrary(name, configureClosure.toAction())
 
 
     /**
@@ -186,10 +142,6 @@ private open class DefaultTestSetContainer
 
     override fun create(name: String): TestSet =
         create(name, TestSet::class.java)
-
-
-    override fun create(name: String, configureClosure: Closure<Any>): TestSet =
-        create(name, TestSet::class.java, configureClosure.toAction())
 
 
     private val entityInstantiator = object : NamedEntityInstantiator<TestSetBase> {
