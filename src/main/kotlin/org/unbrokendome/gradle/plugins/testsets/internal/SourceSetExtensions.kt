@@ -3,6 +3,7 @@ package org.unbrokendome.gradle.plugins.testsets.internal
 import org.gradle.api.file.SourceDirectorySet
 import org.gradle.api.internal.HasConvention
 import org.gradle.api.tasks.SourceSet
+import org.unbrokendome.gradle.plugins.testsets.util.capitalize
 
 
 /**

@@ -1,5 +1,7 @@
 package org.unbrokendome.gradle.plugins.testsets.dsl
 
+import org.unbrokendome.gradle.plugins.testsets.util.capitalize
+
 
 internal object NamingConventions {
 
