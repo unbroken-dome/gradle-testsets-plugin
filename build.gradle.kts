@@ -24,7 +24,7 @@ configurations.named("integrationTestRuntimeOnly") {
 
 
 dependencies {
-    compileOnly(kotlin("stdlib-jdk8"))
+    compileOnly(kotlin("stdlib"))
 
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
 
@@ -41,7 +41,7 @@ dependencies {
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
         freeCompilerArgs = listOf("-Xjvm-default=enable")
     }
 }
