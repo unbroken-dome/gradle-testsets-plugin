@@ -3,13 +3,17 @@
 plugins {
     kotlin("jvm")
     `java-gradle-plugin`
-    id("com.gradle.plugin-publish") version "1.1.0"
+    id("com.gradle.plugin-publish") version "1.2.1"
     `maven-publish`
 }
 
 
-repositories {
-    mavenCentral()
+kotlin {
+    jvmToolchain(11)
+
+    compilerOptions {
+        freeCompilerArgs.add("-Xjvm-default=all")
+    }
 }
 
 
@@ -31,19 +35,12 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter-api")
     testImplementation("org.junit.jupiter:junit-jupiter-params")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     testImplementation(kotlin("gradle-plugin"))
     testImplementation("com.willowtreeapps.assertk:assertk-jvm:0.24")
 
     integrationTestImplementation(gradleApi())
-}
-
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlinOptions {
-        jvmTarget = "1.8"
-        freeCompilerArgs = listOf("-Xjvm-default=enable")
-    }
 }
 
 
@@ -56,17 +53,20 @@ configurations.all {
 }
 
 
+@Suppress("UnstableApiUsage")
 gradlePlugin {
-    website.set(extra["pluginBundle.website"].toString())
-    vcsUrl.set(extra["pluginBundle.vcsUrl"].toString())
+    website.set("https://github.com/unbroken-dome/gradle-testsets-plugin")
+    vcsUrl.set("https://github.com/unbroken-dome/gradle-testsets-plugin.git")
     testSourceSets(integrationTest)
 
     plugins.create("testSetsPlugin") {
         id = "org.unbroken-dome.test-sets"
         implementationClass = "org.unbrokendome.gradle.plugins.testsets.TestSetsPlugin"
-        displayName = extra["pluginBundle.displayName"].toString()
-        description = extra["pluginBundle.description"].toString()
-        tags.set(extra["pluginBundle.tags"].toString().split(','))
+        displayName = "Gradle TestSets plugin"
+        description = "A plugin for the Gradle build system that allows specifying test sets (like integration or " +
+                "acceptance tests). Each test set is a logical grouping of a source set, dependency configurations, " +
+                "and related tasks and artifacts."
+        tags.addAll("testing","testset","test set","integration test")
     }
 }
 
@@ -81,6 +81,8 @@ tasks {
     }
 
     withType<Test> {
+        outputs.upToDateWhen { false }
         useJUnitPlatform()
+        testLogging.showStandardStreams = true
     }
 }

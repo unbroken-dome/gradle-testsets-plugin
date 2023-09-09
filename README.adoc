@@ -11,6 +11,11 @@ endif::[]
 
 = Gradle TestSets plugin
 
+NOTE: Starting with version 7.3, Gradle now offers a built-in feature called
+ https://docs.gradle.org/8.2/userguide/jvm_test_suite_plugin.html[Test Suites]
+ that covers a lot of the functionality of this plugin. Please consider
+ migrating to the Gradle Test Suites plugin if it fits your needs.
+
 A plugin for the Gradle build system that allows specifying test sets (like integration or acceptance tests).
 A test set is a logical grouping of a source set and related dependency configurations, tasks and artifacts.
 

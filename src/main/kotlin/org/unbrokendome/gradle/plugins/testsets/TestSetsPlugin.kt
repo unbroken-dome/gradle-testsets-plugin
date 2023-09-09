@@ -14,12 +14,11 @@ import org.gradle.plugins.ide.eclipse.model.Classpath
 import org.gradle.plugins.ide.eclipse.model.EclipseModel
 import org.gradle.plugins.ide.eclipse.model.SourceFolder
 import org.gradle.plugins.ide.idea.IdeaPlugin
+import org.gradle.plugins.ide.idea.model.IdeaModel
 import org.gradle.testing.jacoco.plugins.JacocoPlugin
 import org.gradle.testing.jacoco.tasks.JacocoReport
 import org.unbrokendome.gradle.plugins.testsets.dsl.*
-import org.unbrokendome.gradle.plugins.testsets.internal.*
 import org.unbrokendome.gradle.plugins.testsets.internal.ConfigurationObserver
-import org.unbrokendome.gradle.plugins.testsets.internal.IdeaModuleObserver
 import org.unbrokendome.gradle.plugins.testsets.internal.SourceSetObserver
 import org.unbrokendome.gradle.plugins.testsets.internal.TestTaskEnvironmentObserver
 import org.unbrokendome.gradle.plugins.testsets.internal.TestTaskSystemPropertiesObserver
@@ -131,7 +130,6 @@ class TestSetsPlugin
         }
 
 
-    @Suppress("NestedLambdaShadowedImplicitParameter")
     private fun Project.addArtifactsFromTestSet(testSet: TestSetBase) {
 
         configurations.registerOrConfigure(testSet.artifactConfigurationName) { conf ->
@@ -226,9 +224,19 @@ class TestSetsPlugin
 
     private fun Project.modifyIdeaModule(testSet: TestSetBase) {
         if (testSet !is PredefinedUnitTestSet) {
-            // the initial setup logic is contained in the IdeaModuleObserver class too
-            val observer = IdeaModuleObserver(this, testSet)
-            (testSet as? TestSetBaseInternal)?.addObserver(observer)
+            extension<IdeaModel>().module { ideaModule ->
+                ideaModule.testSources.from(testSet.sourceSet.allSource.sourceDirectories)
+                ideaModule.testResources.from(testSet.sourceSet.resources.sourceDirectories)
+
+                // Add dependency configurations for this test set to the "TEST" / "plus" scope of the module.
+                val configurations = listOf(
+                    testSet.compileClasspathConfigurationName,
+                    testSet.runtimeClasspathConfigurationName,
+                    testSet.annotationProcessorConfigurationName,
+                ).mapNotNull { configurations.findByName(it) }
+
+                ideaModule.scopes["TEST"]?.get("plus")?.addAll(configurations)
+            }
         }
     }
 }

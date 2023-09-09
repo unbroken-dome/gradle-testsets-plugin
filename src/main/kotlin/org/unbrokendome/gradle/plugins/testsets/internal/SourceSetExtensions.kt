@@ -1,7 +1,7 @@
 package org.unbrokendome.gradle.plugins.testsets.internal
 
 import org.gradle.api.file.SourceDirectorySet
-import org.gradle.api.internal.HasConvention
+import org.gradle.api.reflect.TypeOf
 import org.gradle.api.tasks.SourceSet
 
 
@@ -28,26 +28,23 @@ internal fun SourceSet.getAllCodeSourceDirectorySets(): Sequence<SourceDirectory
 
 
 /**
- * Gets additional [SourceDirectorySet]s that were added to this [SourceSet] by plugin conventions.
+ * Gets additional [SourceDirectorySet] extensions that were added to this [SourceSet] by plugins.
  *
  * For example, the Groovy or Kotlin plugins each add a new `SourceDirectorySet` to a `SourceSet`.
  *
  * @return a [Sequence] containing the additional `SourceDirectorySet`s for this `SourceSet`
  */
 @Suppress("ReplaceSingleLineLet")
-internal fun SourceSet.getAdditionalSourceDirectorySets(): Sequence<SourceDirectorySet> =
-        (this as? HasConvention)?.let { sourceSetConventions ->
-            sourceSetConventions.convention.plugins.asSequence()
-                    .map { (conventionName, convention) ->
-                        convention.javaClass.methods
-                                .find {
-                                    it.name == "get${conventionName.capitalize()}" &&
-                                            SourceDirectorySet::class.java.isAssignableFrom(it.returnType) &&
-                                            it.parameterCount == 0
-                                }
-                                ?.let { method ->
-                                    method.invoke(convention) as SourceDirectorySet
-                                }
-                    }
-                    .filterNotNull()
-        } ?: emptySequence()
+internal fun SourceSet.getAdditionalSourceDirectorySets(): Sequence<SourceDirectorySet> {
+
+    val sourceDirectorySetType = TypeOf.typeOf(SourceDirectorySet::class.java)
+
+    return this.extensions.extensionsSchema
+        .asSequence()
+        .filter { extensionSchema ->
+            sourceDirectorySetType.isAssignableFrom(extensionSchema.publicType)
+        }
+        .map { extensionSchema ->
+            extensions.findByName(extensionSchema.name) as SourceDirectorySet
+        }
+}
